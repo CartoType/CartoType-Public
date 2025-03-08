@@ -16,13 +16,14 @@ See www.cartotype.com for more information.
 #include <locale.h>
 #include <string>
 #include <map>
+#include <set>
 #include <cstring>
 
 namespace CartoTypeCore
 {
 
 class String;
-class Abbreviation;
+class WordToAbbreviate;
 class Text;
 class MString;
 
@@ -51,6 +52,15 @@ using StringDictionary = std::map<String, String>;
 /** A type for a class mapping String objects to integers. */
 using StringTypeDictionary = std::map<String,int>;
 
+class AbbreviateResult
+    {
+    public:
+    /** The abbreviated form of the word, if any. */
+    const String* ShortForm = nullptr;
+    /** If non-zero, the number of characters to replace at the end of the unabbreviated word. If zero, all characters are replaced. */
+    size_t ReplaceCount = 0;
+    };
+
 /** A class providing abbreviations for words. */
 class AbbreviationDictionary
     {
@@ -58,13 +68,16 @@ class AbbreviationDictionary
     void Add(const MString& aLongForm,const MString& aShortForm,AbbreviationType aType);
     /** Returns true if the dictionary is empty. */
     bool IsEmpty() const { return m_abbreviations.empty() && m_suffixes.empty(); }
-    const Abbreviation* Abbreviate(const MString& aWord) const;
+    AbbreviateResult Abbreviate(const MString& aWord,AbbreviationType aType) const;
+    bool IsStopWord(const MString& aWord) const;
 
     private:
     /** A map from lower-case words to their abbreviations, which may be empty for words like 'the'. */
-    std::map<String,Abbreviation> m_abbreviations;
+    std::map<WordToAbbreviate,String> m_abbreviations;
     /** Suffixes and their abbreviations; for example, 'strasse' becomes 'str.' */
-    std::vector<std::pair<String,Abbreviation>> m_suffixes;
+    std::vector<std::pair<String,String>> m_suffixes;
+    /** The set of all stop words: i.e., abbreviatable words and suffixes. */
+    std::set<String> m_stop_words;
     };
 
 /** Flags and constants to tell text searching how to match search terms with found strings. */
@@ -933,16 +946,21 @@ class FoldingIterator: public MIter<int32_t>
     int32_t iCaseVariantIndex = 0;
     };
 
-/** An abbreviation as stored in an abbreviation dictionary. */
-class Abbreviation
+/** A word to be abbreviated, and its type, determining where in a phrase it should be abbreviated. */
+class WordToAbbreviate
     {
     public:
-    /** The abbreviated form of the word. */
-    String ShortForm;
-    /** The type, determining where in a phrase the abbreviation can be used. */
+    bool operator<(const WordToAbbreviate& aOther) const
+        {
+        if (Type == aOther.Type)
+            return Word < aOther.Word;
+        return Type < aOther.Type;
+        }
+
+    /** The word to be abbreviated. */
+    String Word;
+    /** The type of the word, determining where in a phrase it should be abbreviated. */
     AbbreviationType Type = AbbreviationType::Any;
-    /** If non-zero, the number of characters to replace in the unabbreviated form. If zero, all characters are replaced. */
-    uint16_t ReplaceCount = 0;
     };
 
 /** An abbreviation as stored as static data in an abbreviation table. */

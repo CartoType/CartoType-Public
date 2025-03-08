@@ -57,23 +57,19 @@ enum class GeoCodeType
     LandFeature,        ///< A land feature: a peak, hill, cliff, quarry, etc.
     WaterFeature,       ///< A water feature: a lake, river, stream, spring, etc.
 
-    Locality,           ///< A named locality that is not a populated place, or smaller than other populated place categories.
-    Hamlet,             ///< A hamlet (very small populated place).
-
     PostCode,           ///< The location or area of a postal code.
-
     AdminArea10,        ///< A level 10 administrative area as defined by OpenStreetMap admin_level: e.g., a parish or suburb.
     AdminArea9,         ///< A level 9 administrative area as defined by OpenStreetMap admin_level: e.g., a village.
+    AdminArea8,         ///< A level 8 administrative area as defined by OpenStreetMap admin_level: e.g., a French commune.
+    AdminArea7,         ///< A level 7 administrative area as defined by OpenStreetMap admin_level: e.g., a U.S. civil township.
+
+    Locality,           ///< A named locality that is not a populated place, or smaller than other populated place categories.
+    Hamlet,             ///< A hamlet (very small populated place).
     Neighborhood,       ///< A neighborhood: a small distinct part of an urban area.
     Village,            ///< A village: an urban area with a population usually of less than a thousand.
     Suburb,             ///< A suburb: a large part of an urban area.
-
     Island,             ///< An island.
-
-    AdminArea8,         ///< A level 8 administrative area as defined by OpenStreetMap admin_level: e.g., a French commune.
     Town,               ///< A town: an urban area with a population less than 100,000, but larger than a village.
-
-    AdminArea7,         ///< A level 7 administrative area as defined by OpenStreetMap admin_level: e.g., a U.S. civil township.
     City,               ///< A city: an urban area with a population of 100,000 or more.
 
     AdminArea6,         ///< A level 6 administrative area as defined by OpenStreetMap admin_level: e.g., a U.K. or U.S. county.

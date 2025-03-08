@@ -1097,7 +1097,7 @@ class TimeAndDistanceMatrix
     std::vector<uint32_t> m_matrix;
     };
 
-/** A type for functions called by the asynchronous routing function. */
+/** A function called by the asynchronous routing function. It provides the result code, and the route if it could be created. */
 using RouterAsyncCallBack = std::function<void(Result aError,std::unique_ptr<Route> aRoute)>;
 
 /** Parameters for creating a route. */

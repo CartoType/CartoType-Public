@@ -1111,6 +1111,7 @@ void MapForm::Find()
             {
             std::string s("Text ");
             s += std::string(m_find_text) + " not found";
+            m_main_window.ShowError(s.c_str(),0);
             continue;
             }
 

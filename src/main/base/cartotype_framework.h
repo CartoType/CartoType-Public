@@ -23,6 +23,7 @@ See www.cartotype.com for more information.
 #include <memory>
 #include <set>
 #include <atomic>
+#include <mutex>
 
 namespace CartoTypeCore
 {
@@ -78,16 +79,19 @@ class CNavigatorFuture;
 class CMapObjectEditor;
 class MFrameworkObserver;
 class FrameworkGraphics;
+class AsyncMapLoader;
 
 namespace Router
     {
     class TRoutePointInternal;
     }
 
-/** A type for functions called by the asynchronous Find function. */
+/** A function called by the asynchronous Find function. It provides the map objects found, if any. */
 using FindAsyncCallBack = std::function<void(std::unique_ptr<MapObjectArray> aMapObjectArray)>;
-/** A type for functions called by the asynchronous Find function for map object group arrays. */
+/** A function called by the asynchronous Find function for map object group arrays. It provides the map object groups found, if any. */
 using FindAsyncGroupCallBack = std::function<void(std::unique_ptr<MapObjectGroupArray> aMapObjectGroupArray)>;
+/** A function called by the asynchronous LoadMap function. It provides the result of an attempted load, and the filename used. */
+using LoadMapAsyncCallBack = std::function<void(Result aError,const String& aFileName,const std::string& aKey)>;
 
 /** A flag to make the center of the map follow the user's location. */
 constexpr uint32_t KFollowFlagLocation = 1;
@@ -157,26 +161,28 @@ class FrameworkMapDataSet
     {
     public:
     FrameworkMapDataSet(std::shared_ptr<FrameworkEngine> aEngine,std::unique_ptr<CMapDataBase> aDb);
+    ~FrameworkMapDataSet();
     static std::unique_ptr<FrameworkMapDataSet> New(Result& aError,std::shared_ptr<FrameworkEngine> aEngine,const String& aMapFileName,const std::string& aKey);
     static std::unique_ptr<FrameworkMapDataSet> New(Result& aError,std::shared_ptr<FrameworkEngine> aEngine,std::unique_ptr<CMapDataBase> aDb);
 
     std::unique_ptr<FrameworkMapDataSet> Copy(Result& aError,std::shared_ptr<FrameworkEngine> aEngine,bool aFull = true);
     Result LoadMapData(const String& aMapFileName,const std::string& aKey);
-    Result LoadMapData(std::unique_ptr<CMapDataBase> aDb);
+    void LoadMapDataAsync(LoadMapAsyncCallBack aCallback,const String& aMapFileName,const std::string& aKey);
     Result UnloadMapByHandle(uint32_t aHandle);
-    uint32_t LastMapHandle() const;
+    uint32_t LastMapHandle();
     Result CreateWritableMap(WritableMapType aType,String aFileName = nullptr);
     Result SaveMap(uint32_t aHandle,const String& aFileName,FileType aFileType);
     Result ReadMap(uint32_t aHandle,const String& aFileName,FileType aFileType);
     Result ReadMap(uint32_t aHandle,const std::vector<uint8_t>& aData);
     bool MapIsEmpty(uint32_t aHandle);
-    std::unique_ptr<CMap> CreateMap(int32_t aViewWidth,int32_t aViewHeight,const CMap* aMapToCopy);
-    uint32_t MainMapHandle() const;
-    uint32_t MemoryMapHandle() const;
-    size_t MapCount() const;
-    uint32_t MapHandle(size_t aIndex) const;
-    bool MapIsWritable(size_t aIndex) const;
-    std::unique_ptr<CartoTypeCore::MapMetaData> MapMetaData(size_t aIndex) const;
+    /** Gets the handle of the main map. */
+    constexpr uint32_t MainMapHandle() const { return KMainMapHandle; }
+    /** Gets the handle of the standard built-in in-memory map. */
+    constexpr uint32_t MemoryMapHandle() const { return KMemoryMapHandle; };
+    size_t MapCount();
+    uint32_t MapHandle(size_t aIndex);
+    bool MapIsWritable(size_t aIndex);
+    std::unique_ptr<CartoTypeCore::MapMetaData> MapMetaData(size_t aIndex);
     std::vector<String> LayerNames();
 
     Result InsertMapObject(uint32_t aMapHandle,const String& aLayerName,const MPath& aGeometry,
@@ -196,23 +202,34 @@ class FrameworkMapDataSet
 
     // for internal use only
 
-    /** Returns the map database array. For internal use only. */
-    std::shared_ptr<CMapDataBaseArray> MapDataBaseArray() const { return iMapDataBaseArray; }
-    /** Returns the main map database. For internal use only. */
-    CMapDataBase& MainDb() const;
-    /** Returns a map database by its handle.  For internal use only. */
-    CMapDataBase* MapDb(uint32_t aHandle,bool aTolerateNonExistentDb = false);
+    /** Returns the framework engine. For internal use only. */
+    std::shared_ptr<FrameworkEngine> Engine() const { return m_engine; }
+    std::shared_ptr<CMapDataBaseArray> MapDataBaseArray();
+    CMapDataBase& MainDb();
+    std::shared_ptr<CMapDataBase> MapDb(uint32_t aHandle,bool aTolerateNonExistentDb = false);
+    void Sync(FrameworkMapDataSet& aOther);
+    uint32_t Generation() const { return m_generation; }
+    /** Returns the combined extent of all the loaded maps in map coordinates. */
+    RectFP MapExtent() const { return m_map_extent; }
 
     private:
     FrameworkMapDataSet(const FrameworkMapDataSet&) = delete;
     FrameworkMapDataSet(FrameworkMapDataSet&&) = delete;
     FrameworkMapDataSet& operator=(const FrameworkMapDataSet&) = delete;
     FrameworkMapDataSet& operator=(const FrameworkMapDataSet&&) = delete;
+    Result LoadMapData(std::unique_ptr<CMapDataBase> aDb);
 
-    std::shared_ptr<FrameworkEngine> iEngine;
-    std::shared_ptr<CMapDataBaseArray> iMapDataBaseArray;
-    uint32_t iLastMapHandle = 0xFFFF; // start map handles at a value unlikely to conflict with map indexes
-    uint32_t iMemoryMapHandle = 0;
+    std::shared_ptr<FrameworkEngine> m_engine;
+    std::shared_ptr<CMapDataBaseArray> m_map_database_array;
+    std::mutex m_map_database_array_mutex;
+    std::shared_ptr<CMapDataBase> m_main_db;    // this can safely be stored because the main db cannot be unloaded
+    std::shared_ptr<CMapDataBase> m_memory_db;  // this can safely be stored because the memory db cannot be unloaded
+    RectFP m_map_extent;                        // the combined extent of all the loaded maps in map coordinates
+    static constexpr uint32_t KMainMapHandle = 0x10000;     // the handle always used for the main map
+    static constexpr uint32_t KMemoryMapHandle = 0x10001;   // the handle always used for the in-memory map
+    uint32_t m_last_map_handle = KMemoryMapHandle;
+    std::atomic<uint32_t> m_generation { 1 };               // incremented every time a map is loaded or unloaded
+    std::unique_ptr<AsyncMapLoader> m_async_map_loader;
     };
 
 /** Parameters giving detailed control of the perspective view. */
@@ -336,7 +353,7 @@ class Framework: public MNavigatorObserver
         String MapFileName;
         /** The style sheet file name. If this string is empty, the style sheet must be supplied in StyleSheetText. */
         String StyleSheetFileName;
-        /** The style sheet text; used if StyleSheetFileName is empty. */
+        /** The style sheet text; used if StyleSheetFileName is empty. If no style sheet text is supplied an empty style sheet is used and the framework cannot be used to draw maps. */
         std::string StyleSheetText;
         /** The first font file. If this is empty, a small built-in font is loaded containing the Roman script only. */
         String FontFileName;
@@ -396,6 +413,7 @@ class Framework: public MNavigatorObserver
     PositionedBitmap NoticeBitmap() const;
     Result Configure(const String& aFilename);
     Result LoadMap(const String& aMapFileName,const std::string* aKey = nullptr);
+    Result LoadMapAsync(LoadMapAsyncCallBack aCallback,const String& aMapFileName,const std::string& aKey);
     Result CreateWritableMap(WritableMapType aType,String aFileName = nullptr);
     Result SaveMap(uint32_t aHandle,const String& aFileName,FileType aFileType);
     Result ReadMap(uint32_t aHandle,const String& aFileName,FileType aFileType);
@@ -741,6 +759,7 @@ class Framework: public MNavigatorObserver
     std::string HandleQuery(const std::string& aQuery,const std::string& aData);
 
     // functions for internal use only
+    void SyncMapData(const Framework& aFramework);
     std::shared_ptr<CMapStyle> CreateStyleSheet(double aScale);
     std::unique_ptr<CMapStore> NewMapStore(std::shared_ptr<CMapStyle> aStyleSheet,MapObjectPurpose aPurpose,const Rect& aBounds,bool aUseFastAllocator);
     /** Returns the main map database. For internal use only. */
@@ -883,6 +902,7 @@ class Framework: public MNavigatorObserver
     FileLocation iStyleSheetErrorLocation;
     std::unique_ptr<CMapObjectEditor> iMapObjectEditor;
     std::shared_ptr<MUserData> iUserData;
+    std::mutex iMutex;
     };
 
 /** A map renderer using OpenGL ES graphics acceleration. */
