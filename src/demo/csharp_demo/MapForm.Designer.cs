@@ -31,6 +31,10 @@
             mapMenu = new MenuStrip();
             fileMenu = new ToolStripMenuItem();
             openInCurrentMapMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            saveImageAsPNGFileMenuItem = new ToolStripMenuItem();
+            saveDataMenuItem = new ToolStripMenuItem();
+            loadDataMenuItem = new ToolStripMenuItem();
             findMenu = new ToolStripMenuItem();
             findMenuItem = new ToolStripMenuItem();
             findNextMenuItem = new ToolStripMenuItem();
@@ -51,11 +55,11 @@
             cycleMenuItem = new ToolStripMenuItem();
             walkMenuItem = new ToolStripMenuItem();
             hikeMenuItem = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
+            viewRouteInstructionsMenuItem = new ToolStripMenuItem();
             styleMenu = new ToolStripMenuItem();
             chooseStyleSheetMenuItem = new ToolStripMenuItem();
             reloadStyleSheetMenuItem = new ToolStripMenuItem();
-            toolStripSeparator2 = new ToolStripSeparator();
-            saveImageAsPNGFileMenuItem = new ToolStripMenuItem();
             mapMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -70,7 +74,7 @@
             // 
             // fileMenu
             // 
-            fileMenu.DropDownItems.AddRange(new ToolStripItem[] { openInCurrentMapMenuItem, toolStripSeparator2, saveImageAsPNGFileMenuItem });
+            fileMenu.DropDownItems.AddRange(new ToolStripItem[] { openInCurrentMapMenuItem, toolStripSeparator2, saveImageAsPNGFileMenuItem, saveDataMenuItem, loadDataMenuItem });
             fileMenu.MergeAction = MergeAction.MatchOnly;
             fileMenu.Name = "fileMenu";
             fileMenu.Size = new Size(37, 20);
@@ -81,9 +85,35 @@
             openInCurrentMapMenuItem.MergeAction = MergeAction.Insert;
             openInCurrentMapMenuItem.MergeIndex = 1;
             openInCurrentMapMenuItem.Name = "openInCurrentMapMenuItem";
-            openInCurrentMapMenuItem.Size = new Size(205, 22);
-            openInCurrentMapMenuItem.Text = "Open in Current Map...";
+            openInCurrentMapMenuItem.Size = new Size(245, 22);
+            openInCurrentMapMenuItem.Text = "Open in current map...";
             openInCurrentMapMenuItem.Click += openInCurrentMapMenuItem_Click;
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(242, 6);
+            // 
+            // saveImageAsPNGFileMenuItem
+            // 
+            saveImageAsPNGFileMenuItem.Name = "saveImageAsPNGFileMenuItem";
+            saveImageAsPNGFileMenuItem.Size = new Size(245, 22);
+            saveImageAsPNGFileMenuItem.Text = "Save image as PNG file...";
+            saveImageAsPNGFileMenuItem.Click += saveImageAsPNGFileMenuItem_Click;
+            // 
+            // saveDataMenuItem
+            // 
+            saveDataMenuItem.Name = "saveDataMenuItem";
+            saveDataMenuItem.Size = new Size(245, 22);
+            saveDataMenuItem.Text = "Save added data to a CTMS file...";
+            saveDataMenuItem.Click += saveDataMenuItem_Click;
+            // 
+            // loadDataMenuItem
+            // 
+            loadDataMenuItem.Name = "loadDataMenuItem";
+            loadDataMenuItem.Size = new Size(245, 22);
+            loadDataMenuItem.Text = "Load data from a CTMS file...";
+            loadDataMenuItem.Click += loadDataMenuItem_Click;
             // 
             // findMenu
             // 
@@ -98,7 +128,7 @@
             // 
             findMenuItem.Name = "findMenuItem";
             findMenuItem.ShortcutKeys = Keys.Control | Keys.F;
-            findMenuItem.Size = new Size(167, 22);
+            findMenuItem.Size = new Size(165, 22);
             findMenuItem.Text = "Find...";
             findMenuItem.Click += findMenuItem_Click;
             // 
@@ -107,15 +137,15 @@
             findNextMenuItem.Enabled = false;
             findNextMenuItem.Name = "findNextMenuItem";
             findNextMenuItem.ShortcutKeys = Keys.Control | Keys.G;
-            findNextMenuItem.Size = new Size(167, 22);
-            findNextMenuItem.Text = "Find Next";
+            findNextMenuItem.Size = new Size(165, 22);
+            findNextMenuItem.Text = "Find next";
             findNextMenuItem.Click += findNextMenuItem_Click;
             // 
             // findAddressMenuItem
             // 
             findAddressMenuItem.Name = "findAddressMenuItem";
-            findAddressMenuItem.Size = new Size(167, 22);
-            findAddressMenuItem.Text = "Find Address...";
+            findAddressMenuItem.Size = new Size(165, 22);
+            findAddressMenuItem.Text = "Find address...";
             findAddressMenuItem.Click += findAddressMenuItem_Click;
             // 
             // viewMenu
@@ -131,7 +161,7 @@
             // 
             scaleMenuItem.CheckOnClick = true;
             scaleMenuItem.Name = "scaleMenuItem";
-            scaleMenuItem.Size = new Size(162, 22);
+            scaleMenuItem.Size = new Size(161, 22);
             scaleMenuItem.Text = "Scale";
             scaleMenuItem.CheckedChanged += scaleMenuItem_CheckedChanged;
             // 
@@ -139,7 +169,7 @@
             // 
             legendMenuItem.CheckOnClick = true;
             legendMenuItem.Name = "legendMenuItem";
-            legendMenuItem.Size = new Size(162, 22);
+            legendMenuItem.Size = new Size(161, 22);
             legendMenuItem.Text = "Legend";
             legendMenuItem.CheckedChanged += legendMenuItem_CheckedChanged;
             // 
@@ -147,16 +177,16 @@
             // 
             northUpMenuItem.Enabled = false;
             northUpMenuItem.Name = "northUpMenuItem";
-            northUpMenuItem.Size = new Size(162, 22);
-            northUpMenuItem.Text = "North Up";
+            northUpMenuItem.Size = new Size(161, 22);
+            northUpMenuItem.Text = "North up";
             northUpMenuItem.Click += northUpMenuItem_Click;
             // 
             // perspectiveViewMenuItem
             // 
             perspectiveViewMenuItem.CheckOnClick = true;
             perspectiveViewMenuItem.Name = "perspectiveViewMenuItem";
-            perspectiveViewMenuItem.Size = new Size(162, 22);
-            perspectiveViewMenuItem.Text = "Perspective View";
+            perspectiveViewMenuItem.Size = new Size(161, 22);
+            perspectiveViewMenuItem.Text = "Perspective view";
             perspectiveViewMenuItem.CheckedChanged += perspectiveViewMenuItem_CheckedChanged;
             // 
             // metricUnitsMenuItem
@@ -165,29 +195,29 @@
             metricUnitsMenuItem.CheckOnClick = true;
             metricUnitsMenuItem.CheckState = CheckState.Checked;
             metricUnitsMenuItem.Name = "metricUnitsMenuItem";
-            metricUnitsMenuItem.Size = new Size(162, 22);
-            metricUnitsMenuItem.Text = "Metric Units";
+            metricUnitsMenuItem.Size = new Size(161, 22);
+            metricUnitsMenuItem.Text = "Metric units";
             metricUnitsMenuItem.CheckedChanged += metricUnitsMenuItem_CheckedChanged;
             // 
             // threeDBuildingsMenuItem
             // 
             threeDBuildingsMenuItem.CheckOnClick = true;
             threeDBuildingsMenuItem.Name = "threeDBuildingsMenuItem";
-            threeDBuildingsMenuItem.Size = new Size(162, 22);
-            threeDBuildingsMenuItem.Text = "3D Buildings";
+            threeDBuildingsMenuItem.Size = new Size(161, 22);
+            threeDBuildingsMenuItem.Text = "3D buildings";
             threeDBuildingsMenuItem.CheckedChanged += threeDBuildingsMenuItem_CheckedChanged;
             // 
             // nightModeMenuItem
             // 
             nightModeMenuItem.CheckOnClick = true;
             nightModeMenuItem.Name = "nightModeMenuItem";
-            nightModeMenuItem.Size = new Size(162, 22);
-            nightModeMenuItem.Text = "Night Mode";
+            nightModeMenuItem.Size = new Size(161, 22);
+            nightModeMenuItem.Text = "Night mode";
             nightModeMenuItem.CheckedChanged += nightModeMenuItem_CheckedChanged;
             // 
             // routeMenu
             // 
-            routeMenu.DropDownItems.AddRange(new ToolStripItem[] { reverseRouteMenuItem, deleteRouteMenuItem, toolStripSeparator1, driveMenuItem, cycleMenuItem, walkMenuItem, hikeMenuItem });
+            routeMenu.DropDownItems.AddRange(new ToolStripItem[] { reverseRouteMenuItem, deleteRouteMenuItem, toolStripSeparator1, driveMenuItem, cycleMenuItem, walkMenuItem, hikeMenuItem, toolStripSeparator3, viewRouteInstructionsMenuItem });
             routeMenu.MergeAction = MergeAction.Insert;
             routeMenu.MergeIndex = 3;
             routeMenu.Name = "routeMenu";
@@ -198,21 +228,21 @@
             // reverseRouteMenuItem
             // 
             reverseRouteMenuItem.Name = "reverseRouteMenuItem";
-            reverseRouteMenuItem.Size = new Size(148, 22);
-            reverseRouteMenuItem.Text = "Reverse Route";
+            reverseRouteMenuItem.Size = new Size(204, 22);
+            reverseRouteMenuItem.Text = "Reverse route";
             reverseRouteMenuItem.Click += reverseRouteMenuItem_Click;
             // 
             // deleteRouteMenuItem
             // 
             deleteRouteMenuItem.Name = "deleteRouteMenuItem";
-            deleteRouteMenuItem.Size = new Size(148, 22);
-            deleteRouteMenuItem.Text = "Delete Route";
+            deleteRouteMenuItem.Size = new Size(204, 22);
+            deleteRouteMenuItem.Text = "Delete route";
             deleteRouteMenuItem.Click += deleteRouteMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(145, 6);
+            toolStripSeparator1.Size = new Size(201, 6);
             // 
             // driveMenuItem
             // 
@@ -220,30 +250,42 @@
             driveMenuItem.CheckOnClick = true;
             driveMenuItem.CheckState = CheckState.Checked;
             driveMenuItem.Name = "driveMenuItem";
-            driveMenuItem.Size = new Size(148, 22);
+            driveMenuItem.Size = new Size(204, 22);
             driveMenuItem.Text = "Drive";
             driveMenuItem.Click += driveMenuItem_Click;
             // 
             // cycleMenuItem
             // 
             cycleMenuItem.Name = "cycleMenuItem";
-            cycleMenuItem.Size = new Size(148, 22);
+            cycleMenuItem.Size = new Size(204, 22);
             cycleMenuItem.Text = "Cycle";
             cycleMenuItem.Click += cycleMenuItem_Click;
             // 
             // walkMenuItem
             // 
             walkMenuItem.Name = "walkMenuItem";
-            walkMenuItem.Size = new Size(148, 22);
+            walkMenuItem.Size = new Size(204, 22);
             walkMenuItem.Text = "Walk";
             walkMenuItem.Click += walkMenuItem_Click;
             // 
             // hikeMenuItem
             // 
             hikeMenuItem.Name = "hikeMenuItem";
-            hikeMenuItem.Size = new Size(148, 22);
+            hikeMenuItem.Size = new Size(204, 22);
             hikeMenuItem.Text = "Hike";
             hikeMenuItem.Click += hikeMenuItem_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(201, 6);
+            // 
+            // viewRouteInstructionsMenuItem
+            // 
+            viewRouteInstructionsMenuItem.Name = "viewRouteInstructionsMenuItem";
+            viewRouteInstructionsMenuItem.Size = new Size(204, 22);
+            viewRouteInstructionsMenuItem.Text = "View route instructions...";
+            viewRouteInstructionsMenuItem.Click += viewRouteInstructionsMenuItem_Click;
             // 
             // styleMenu
             // 
@@ -257,29 +299,17 @@
             // chooseStyleSheetMenuItem
             // 
             chooseStyleSheetMenuItem.Name = "chooseStyleSheetMenuItem";
-            chooseStyleSheetMenuItem.Size = new Size(210, 22);
-            chooseStyleSheetMenuItem.Text = "Choose Style Sheet...";
+            chooseStyleSheetMenuItem.Size = new Size(208, 22);
+            chooseStyleSheetMenuItem.Text = "Choose style sheet...";
             chooseStyleSheetMenuItem.Click += chooseStyleSheetMenuItem_Click;
             // 
             // reloadStyleSheetMenuItem
             // 
             reloadStyleSheetMenuItem.Name = "reloadStyleSheetMenuItem";
             reloadStyleSheetMenuItem.ShortcutKeys = Keys.Control | Keys.L;
-            reloadStyleSheetMenuItem.Size = new Size(210, 22);
-            reloadStyleSheetMenuItem.Text = "Reload Style Sheet";
+            reloadStyleSheetMenuItem.Size = new Size(208, 22);
+            reloadStyleSheetMenuItem.Text = "Reload style sheet";
             reloadStyleSheetMenuItem.Click += reloadStyleSheetMenuItem_Click;
-            // 
-            // toolStripSeparator2
-            // 
-            toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(202, 6);
-            // 
-            // saveImageAsPNGFileMenuItem
-            // 
-            saveImageAsPNGFileMenuItem.Name = "saveImageAsPNGFileMenuItem";
-            saveImageAsPNGFileMenuItem.Size = new Size(205, 22);
-            saveImageAsPNGFileMenuItem.Text = "Save Image as PNG File...";
-            saveImageAsPNGFileMenuItem.Click += saveImageAsPNGFileMenuItem_Click;
             // 
             // MapForm
             // 
@@ -290,6 +320,7 @@
             MainMenuStrip = mapMenu;
             Name = "MapForm";
             Text = "MapForm";
+            FormClosing += MapForm_FormClosing;
             Load += MapForm_Load;
             ClientSizeChanged += MapForm_ClientSizeChanged;
             Paint += MapForm_Paint;
@@ -331,5 +362,9 @@
         private ToolStripMenuItem reloadStyleSheetMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem saveImageAsPNGFileMenuItem;
+        private ToolStripMenuItem loadDataMenuItem;
+        internal ToolStripMenuItem saveDataMenuItem;
+        private ToolStripSeparator toolStripSeparator3;
+        internal ToolStripMenuItem viewRouteInstructionsMenuItem;
     }
 }

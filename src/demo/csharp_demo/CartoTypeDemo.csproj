@@ -16,7 +16,8 @@
 
   <ItemGroup>
     <Reference Include="CartoTypeWrapper">
-      <HintPath>..\..\..\bin\17.0\x64\Release\CartoTypeWrapper.dll</HintPath>
+        <HintPath Condition="Exists('..\..\..\bin\17.0\x64\Release')">..\..\..\bin\17.0\x64\Release\CartoTypeWrapper.dll</HintPath>
+        <HintPath Condition="Exists('bin\x64\Release\net8.0-windows')">bin\x64\Release\net8.0-windows\CartoTypeWrapper.dll</HintPath>
     </Reference>
   </ItemGroup>
 

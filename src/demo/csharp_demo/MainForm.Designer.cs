@@ -54,6 +54,7 @@
             fileMenu.Name = "fileMenu";
             fileMenu.Size = new Size(37, 20);
             fileMenu.Text = "File";
+            fileMenu.DropDownOpening += fileMenu_DropDownOpening;
             // 
             // openMenuItem
             // 
@@ -67,7 +68,7 @@
             // 
             openOnlineMapMenuItem.Name = "openOnlineMapMenuItem";
             openOnlineMapMenuItem.Size = new Size(180, 22);
-            openOnlineMapMenuItem.Text = "Open Online Map...";
+            openOnlineMapMenuItem.Text = "Open online map...";
             openOnlineMapMenuItem.Click += openOnlineMapMenuItem_Click;
             // 
             // quitMenuItem
@@ -87,7 +88,7 @@
             // aboutCartoTypeMenuItem
             // 
             aboutCartoTypeMenuItem.Name = "aboutCartoTypeMenuItem";
-            aboutCartoTypeMenuItem.Size = new Size(180, 22);
+            aboutCartoTypeMenuItem.Size = new Size(172, 22);
             aboutCartoTypeMenuItem.Text = "About CartoType...";
             aboutCartoTypeMenuItem.Click += aboutCartoTypeMenuItem_Click;
             // 

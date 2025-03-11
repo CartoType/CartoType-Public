@@ -32,8 +32,8 @@
             Key = new TextBox();
             label1 = new Label();
             label2 = new Label();
-            button1 = new Button();
-            button2 = new Button();
+            okButton = new Button();
+            cancelButton = new Button();
             SuspendLayout();
             // 
             // URL
@@ -69,32 +69,33 @@
             label2.TabIndex = 3;
             label2.Text = "API key";
             // 
-            // button1
+            // okButton
             // 
-            button1.DialogResult = DialogResult.OK;
-            button1.Location = new Point(468, 131);
-            button1.Name = "button1";
-            button1.Size = new Size(101, 31);
-            button1.TabIndex = 4;
-            button1.Text = "OK";
-            button1.UseVisualStyleBackColor = true;
+            okButton.DialogResult = DialogResult.OK;
+            okButton.Location = new Point(468, 131);
+            okButton.Name = "okButton";
+            okButton.Size = new Size(101, 31);
+            okButton.TabIndex = 4;
+            okButton.Text = "OK";
+            okButton.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // cancelButton
             // 
-            button2.Location = new Point(595, 131);
-            button2.Name = "button2";
-            button2.Size = new Size(96, 31);
-            button2.TabIndex = 5;
-            button2.Text = "Cancel";
-            button2.UseVisualStyleBackColor = true;
+            cancelButton.DialogResult = DialogResult.Cancel;
+            cancelButton.Location = new Point(595, 131);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new Size(96, 31);
+            cancelButton.TabIndex = 5;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
             // 
             // OnlineMapDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(739, 190);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(cancelButton);
+            Controls.Add(okButton);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(Key);
@@ -109,8 +110,8 @@
         #endregion
         private Label label1;
         private Label label2;
-        private Button button1;
-        private Button button2;
+        private Button okButton;
+        private Button cancelButton;
         internal TextBox URL;
         internal TextBox Key;
     }

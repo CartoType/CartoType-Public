@@ -9,9 +9,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Extensions;
 
 namespace CartoTypeDemo
 {
+
     public partial class MapForm : Form
     {
         public MapForm()
@@ -61,6 +63,17 @@ namespace CartoTypeDemo
 
             if (m_framework == null)
                 return false;
+
+            // Create an in-memory map to store pushpins.
+            var error = m_framework.CreateWritableMap(CartoType.WritableMapType.Memory);
+            if (error == CartoType.Result.Success)
+                m_writable_map_handle = m_framework.LastMapHandle;
+
+            // Start an async task to load navigation data.
+            m_framework.LoadNavigationData();
+
+            // Prevent panning beyond the map extent, and zooming in further than 1:1000.
+            m_framework.SetViewLimits(1000, 0, null);
 
             // Load extra fonts
             LoadFont("DejaVuSans-Bold.ttf");
@@ -112,6 +125,19 @@ namespace CartoTypeDemo
             MainMenuStrip?.Hide();
         }
 
+        private void MapForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (m_writable_map_changed && !m_framework.MapIsEmpty(m_writable_map_handle))
+            {
+                var result = MessageBox.Show("You have unsaved added data. Save it before quitting?", "Save added data", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    if (!SaveData())
+                        e.Cancel = true;
+                }
+            }
+        }
+
         private void MapForm_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -125,33 +151,114 @@ namespace CartoTypeDemo
                 var p = new CartoType.Point(e.Location.X, e.Location.Y);
                 m_framework.ConvertPoint(p, CartoType.CoordType.Display, CartoType.CoordType.Degree);
 
-                // Get the address of the point clicked on.
+                // Get the address and geographical position of the point clicked on.
                 var address = new CartoType.Address();
                 m_framework.GetAddress(address, p.X, p.Y, CartoType.CoordType.Degree);
-                m_route_dialog.addressText.Text = address.ToString(true);
-                m_route_dialog.addressText.Text += "\r\nlat: " + p.Y + " long: " + p.X;
+                m_route_dialog.address.Text = address.ToString(true);
+                m_route_dialog.pushpinName.Text = m_route_dialog.address.Text;
+                m_route_dialog.pushpinDesc.Text = "";
+
+                var lat_suffix = p.Y < 0 ? "S" : "N";
+                var lon_suffix = p.X < 0 ? "W" : "E";
+                m_route_dialog.address.Text += $"\r\nlat: {Math.Abs(p.Y):F4}{lat_suffix} lon: {Math.Abs(p.X):F4}{lon_suffix}";
 
                 int height = m_framework.Height(p.X, p.Y, CartoType.CoordType.Degree);
                 if (height > -32768)
-                    m_route_dialog.addressText.Text += "\r\naltitude:" + height;
+                {
+                    if (m_framework.MetricUnits)
+                        m_route_dialog.address.Text += $"\r\naltitude: {height}m";
+                    else
+                        m_route_dialog.address.Text += $"\r\naltitude: {height / 0.3048:0}ft";
+                }
 
+                // See if there is a pushpin within 2 millimetres.
+                var map_object_list = new CartoType.MapObjectList();
+                double pixel_mm = m_framework.ResolutionDpi / 25.4;
+                m_framework.FindInDisplay(map_object_list, 10, e.Location.X, e.Location.Y, Math.Ceiling(2 * pixel_mm));
+                CartoType.MapObject pushpin = null;
+                long pushpin_id = 0;
+                var pushpin_point = new CartoType.Point();
+                string pushpin_color = "";
+                foreach (CartoType.MapObject map_object in map_object_list)
+                {
+                    if (map_object.LayerName == "pushpin" && map_object.Type == CartoType.MapObjectType.Point)
+                    {
+                        pushpin = map_object;
+                        pushpin_id = map_object.Id;
+                        pushpin_point = map_object.Center;
+                        pushpin_color = map_object.StringAttribute("_color");
+                        m_route_dialog.pushpinName.Text = pushpin.Label;
+                        m_route_dialog.pushpinDesc.Text = pushpin.StringAttribute("desc");
+                        break;
+                    }
+                }
+
+                if (pushpin != null)
+                {
+                    m_route_dialog.addOrEditPushpinButton.Text = "Edit pushpin";
+                    m_route_dialog.addOrEditPushpinButton.Checked = true;
+                    m_route_dialog.deletePushpinButton.Visible = true;
+                }
+                else
+                {
+                    pushpin_point.X = e.Location.X;
+                    pushpin_point.Y = e.Location.Y;
+                    m_framework.ConvertPoint(pushpin_point, CartoType.CoordType.Display, CartoType.CoordType.Map);
+
+                    m_route_dialog.addOrEditPushpinButton.Text = "Add pushpin";
+                    m_route_dialog.deletePushpinButton.Visible = false;
+                    if (m_route_coord_set.RoutePointList[0].X == 0 && m_route_coord_set.RoutePointList[0].Y == 0)
+                        m_route_dialog.startButton.Checked = true;
+                    else
+                        m_route_dialog.endButton.Checked = true;
+                }
+                m_route_dialog.UpdateVisibility();
+
+                bool create_route = false;
                 var rp = new CartoType.RoutePoint();
                 rp.X = p.X;
                 rp.Y = p.Y;
-
-                bool create_route = false;
-                if (m_route_coord_set.RoutePointList[0].X == 0 && m_route_coord_set.RoutePointList[0].Y == 0)
-                    m_route_dialog.startButton.Checked = true;
-                else
-                    m_route_dialog.endButton.Checked = true;
-
                 if (m_route_dialog.ShowDialog() == DialogResult.OK)
                 {
                     if (m_route_dialog.startButton.Checked)
+                    {
                         m_route_coord_set.RoutePointList[0] = rp;
+                        create_route = true;
+                    }
                     else if (m_route_dialog.endButton.Checked)
+                    {
                         m_route_coord_set.RoutePointList[m_route_coord_set.RoutePointList.Count - 1] = rp;
-                    create_route = true;
+                        create_route = true;
+                    }
+                    else if (m_route_dialog.addOrEditPushpinButton.Checked)
+                    {
+                        var string_attrib = m_route_dialog.pushpinName.Text;
+                        string_attrib = CartoType.Util.SetAttribute(string_attrib, "desc", m_route_dialog.pushpinDesc.Text);
+                        if (!m_route_dialog.PushPinColor().IsEmpty)
+                        {
+                            var c = m_route_dialog.PushPinColor();
+                            // Convert the colour into CartoType's RGBA hex format.
+                            pushpin_color = $"#{c.R:X2}{c.G:X2}{c.B:X2}{c.A:X2}";
+                        }
+                        string_attrib = CartoType.Util.SetAttribute(string_attrib, "_color", pushpin_color);
+                        var extent = new CartoType.Rect();
+                        m_framework.GetMapExtent(extent, CartoType.CoordType.Map);
+                        if (extent.Contains(pushpin_point.X, pushpin_point.Y))
+                        {
+                            m_framework.InsertPointMapObject(m_writable_map_handle, "pushpin", pushpin_point.X, pushpin_point.Y, CartoType.CoordType.Map,
+                                string_attrib, null, ref pushpin_id, true);
+                            m_writable_map_changed = true;
+                        }
+                        else
+                            ShowError(0, "cannot insert a pushpin outside the map");
+
+                    }
+                    else if (m_route_dialog.deletePushpinButton.Checked)
+                    {
+                        long count = 0;
+                        m_framework.DeleteMapObjects(m_writable_map_handle, pushpin_id, pushpin_id, ref count, null);
+                        m_writable_map_changed = true;
+                    }
                 }
 
                 if (create_route)
@@ -229,11 +336,15 @@ namespace CartoTypeDemo
             }
         }
 
+        internal void UpdateSaveDataMenuItem()
+        {
+            saveDataMenuItem.Enabled = !m_framework.MapIsEmpty(m_writable_map_handle);
+        }
+
         private void openInCurrentMapMenuItem_Click(object sender, EventArgs e)
         {
             var open_file_dialog = new OpenFileDialog();
             open_file_dialog.Title = "Add a map to the current map";
-            open_file_dialog.InitialDirectory = "c:\\";
             open_file_dialog.Filter = "CartoType maps (CTM1 files)|*.ctm1";
 
             if (open_file_dialog.ShowDialog() == DialogResult.OK)
@@ -253,7 +364,47 @@ namespace CartoTypeDemo
             {
                 var error = m_framework.WriteMapImage(save_file_dialog.FileName, CartoType.FileType.Png, true);
                 if (error != CartoType.Result.Success)
-                    ShowError(error,"cannot write PNG file" + save_file_dialog.FileName);
+                    ShowError(error, "cannot write PNG file " + save_file_dialog.FileName);
+            }
+        }
+
+        private bool SaveData()
+        {
+            bool saved = false;
+            var save_file_dialog = new SaveFileDialog();
+            save_file_dialog.Title = "Save added data as a CTMS file";
+            save_file_dialog.Filter = "CartoType serialized map files|*.ctms";
+            if (save_file_dialog.ShowDialog() == DialogResult.OK)
+            {
+                var error = m_framework.SaveMap(m_writable_map_handle, save_file_dialog.FileName, CartoType.FileType.Ctms);
+                if (error == CartoType.Result.Success)
+                {
+                    saved = true;
+                    m_writable_map_changed = false;
+                }
+                else
+                    ShowError(error, "cannot save data to CTMS file " + save_file_dialog.FileName);
+            }
+            return saved;
+        }
+
+        private void saveDataMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveData();
+        }
+
+
+        private void loadDataMenuItem_Click(object sender, EventArgs e)
+        {
+            var open_file_dialog = new OpenFileDialog();
+            open_file_dialog.Title = "Import data from a CTMS file";
+            open_file_dialog.Filter = "CartoType serialized map files|*.ctms";
+
+            if (open_file_dialog.ShowDialog() == DialogResult.OK)
+            {
+                var result = m_framework.ReadMap(m_writable_map_handle, open_file_dialog.FileName, CartoType.FileType.Ctms);
+                if (result != CartoType.Result.Success)
+                    ShowError(result, "cannot read data from CTMS file " + open_file_dialog.FileName);
             }
         }
 
@@ -362,6 +513,7 @@ namespace CartoTypeDemo
         {
             reverseRouteMenuItem.Enabled = m_route != null;
             deleteRouteMenuItem.Enabled = m_route != null;
+            viewRouteInstructionsMenuItem.Enabled = m_route != null;
         }
 
         private void reverseRouteMenuItem_Click(object sender, EventArgs e)
@@ -417,11 +569,18 @@ namespace CartoTypeDemo
             CalculateAndDisplayRoute();
         }
 
+        private void viewRouteInstructionsMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new RouteInstructionsDialog();
+            dialog.instructions.Text = m_framework.RouteInstructions(m_route).ReplaceLineEndings();
+            dialog.instructions.Select(0, 0);
+            dialog.ShowDialog();
+        }
+
         private void chooseStyleSheetMenuItem_Click(object sender, EventArgs e)
         {
             var open_file_dialog = new OpenFileDialog();
             open_file_dialog.Title = "Choose a style sheet";
-            open_file_dialog.InitialDirectory = "c:\\";
             open_file_dialog.Filter = "CartoType style sheets|*.ctstyle|All files|*.*";
 
             if (open_file_dialog.ShowDialog() == DialogResult.OK)
@@ -460,8 +619,10 @@ namespace CartoTypeDemo
 
         private void ShowError(CartoType.Result aError, string aMessage)
         {
-            string s = aMessage + ": " + CartoType.Util.ErrorString(aError);
-            MessageBox.Show(s, "CartoType error");
+            if (aError == CartoType.Result.Success)
+                MessageBox.Show(aMessage, "CartoType error");
+            else
+                MessageBox.Show($"{aMessage}: {CartoType.Util.ErrorString(aError)}", "CartoType error");
         }
 
         private void CreateLegend()
@@ -497,6 +658,8 @@ namespace CartoTypeDemo
 
         private MainForm m_parent;
         private CartoType.Framework m_framework;
+        private int m_writable_map_handle = 0;
+        private bool m_writable_map_changed = false;
         private CartoType.MapRenderer m_map_renderer;
         private CartoType.Point m_map_drag_anchor = new();
         private FindDialog m_find_dialog = new();

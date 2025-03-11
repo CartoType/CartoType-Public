@@ -53,7 +53,7 @@
             aboutText.Location = new Point(25, 105);
             aboutText.Name = "aboutText";
             aboutText.ReadOnly = true;
-            aboutText.Size = new Size(477, 309);
+            aboutText.Size = new Size(477, 344);
             aboutText.TabIndex = 1;
             aboutText.Text = "";
             // 
@@ -62,7 +62,7 @@
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Window;
-            ClientSize = new Size(527, 426);
+            ClientSize = new Size(527, 475);
             Controls.Add(aboutText);
             Controls.Add(pictureBox1);
             Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);

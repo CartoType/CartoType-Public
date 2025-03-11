@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CartoTypeDemo
 {
@@ -11,13 +10,17 @@ namespace CartoTypeDemo
             IsMdiContainer = true;
             InitializeComponent();
 
-            // Strip the path down to a string ending just before \src\; if no such pattern is found, use the app path
+            // Strip the path down to a string ending just before the last \src\. If no such pattern is found, start before the last \CartoTypeDemo\.
             m_cartotype_source_path = m_app_path;
             int n = m_cartotype_source_path.LastIndexOf("\\src\\");
+            if (n == -1)
+                n = m_cartotype_source_path.LastIndexOf("\\CartoTypeDemo\\");
             if (n != -1)
+            {
                 m_cartotype_source_path = m_cartotype_source_path.Substring(0, n + 1);
-            if (m_cartotype_source_path.Length == 0 || m_cartotype_source_path[m_cartotype_source_path.Length - 1] != '\\')
-                m_cartotype_source_path += '\\';
+                if (m_cartotype_source_path.Length == 0 || m_cartotype_source_path[m_cartotype_source_path.Length - 1] != '\\')
+                    m_cartotype_source_path += '\\';
+            }
 
             /*
             Find the default style sheet.
@@ -36,11 +39,18 @@ namespace CartoTypeDemo
             }
 
         }
+
+        private void fileMenu_DropDownOpening(object sender, EventArgs e)
+        {
+            var map_form = ActiveMdiChild as MapForm;
+            if (map_form != null)
+                map_form.UpdateSaveDataMenuItem();
+        }
+
         private void openMenuItem_Click(object sender, EventArgs e)
         {
             var open_file_dialog = new OpenFileDialog();
             open_file_dialog.Title = "Open a map";
-            open_file_dialog.InitialDirectory = "c:\\";
             open_file_dialog.Filter = "CartoType maps (CTM1 files)|*.ctm1";
 
             if (open_file_dialog.ShowDialog() == DialogResult.OK)
@@ -87,10 +97,10 @@ namespace CartoTypeDemo
             m_about_dialog.aboutText.SelectionFont = plain_font;
             m_about_dialog.aboutText.AppendText(" allows you to view maps, calculate routes, find addresses and points of interest, and add your own data.\r\n\r\n" +
                    "See cartotype.com for information about licensing CartoType.\r\n\r\n" +
-                   "This application was created using\r\nCartoType " + CartoType.Util.Description() + ".");
+                   $"This application was created using\r\nCartoType {CartoType.Util.Description()}.");
 
-            m_about_dialog.aboutText.AppendText("\r\n\r\nTo pan the map use mouse left-click plus drag.\r\nTo zoom the map use the mouse wheel." +
-                "\r\nTo rotate the map use CTRL plus mouse wheel.\r\nTo choose the start or end of a route use mouse right-click.");
+            m_about_dialog.aboutText.AppendText("\r\n\r\nTo pan the map use left-click plus drag.\r\nTo zoom the map use the mouse wheel." +
+                "\r\nTo rotate the map use CTRL plus mouse wheel.\r\nTo choose the start or end of a route use right-click.");
 
             var map_form = ActiveMdiChild as MapForm;
             if (map_form != null)
@@ -99,13 +109,26 @@ namespace CartoTypeDemo
                 var m = framework.MapMetaData(0);
                 if (m != null)
                 {
-                    string s = "\r\n\r\nMap " + m.DataSetName;
+                    string s = $"\r\n\r\nMap {m.DataSetName}";
                     if (m.CartoTypeVersionMajor > 0)
-                        s += " created by CartoType " + m.CartoTypeVersionMajor + "." + m.CartoTypeVersionMinor + "." + m.CartoTypeBuild;
+                        s += $" created by CartoType {m.CartoTypeVersionMajor}.{m.CartoTypeVersionMinor}.{m.CartoTypeBuild}.";
                     if (m.FileVersionMajor > 0)
-                        s += ".\r\nCTM1 version " + m.FileVersionMajor + "." + m.FileVersionMinor;
-                    s += ".\r\nProjection: " + m.ProjectionName + ".";
-
+                        s += $"\r\nCTM1 version {m.FileVersionMajor}.{m.FileVersionMinor}.";
+                    s += $"\r\nProjection: {m.ProjectionName}.";
+                    s += $"\r\nExtent in degrees:{m.ExtentInDegrees.MinX:F2},{m.ExtentInDegrees.MinY:F2},{m.ExtentInDegrees.MaxX:F2},{m.ExtentInDegrees.MaxY:F2}.";
+                    var r = m.RouteTableType switch
+                    {
+                        CartoType.MapTableType.RouteTableAStar => "a-star (-route=a)",
+                        CartoType.MapTableType.RouteTableCH => "contraction hierarchy (-route=c)",
+                        CartoType.MapTableType.RouteTableTurnExpanded => "turn-expanded (-route=t)",
+                        CartoType.MapTableType.RouteTableCHStandAlone => "contraction hierarchy stand-alone (-route=cs)",
+                        CartoType.MapTableType.RouteTableTECH => "turn-expanded contraction hierarchy (-route=tech)",
+                        CartoType.MapTableType.RouteTableCHTiled => "contraction hierarchy, tiled (-route=ct)",
+                        CartoType.MapTableType.RouteTableTECHTiled => "turn-expanded contraction hierarchy, tiled (-route=tt)",
+                        CartoType.MapTableType.RouteTableTurnExpandedCompact => "turn-expanded, compact (-route=tc)",
+                        _ => "none"
+                    };
+                    s += $"\r\nRoute table: {r}.";
                     m_about_dialog.aboutText.AppendText(s);
                 }
             }
