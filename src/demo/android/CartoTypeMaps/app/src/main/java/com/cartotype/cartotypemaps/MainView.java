@@ -9,7 +9,7 @@ import com.cartotype.*;
 import com.cartotype.Error;
 
 @SuppressLint("ViewConstructor")
-public class MainView extends MapView implements DialogInterface.OnClickListener
+public class MainView extends MapView implements DialogInterface.OnClickListener, RouterAsyncInterface
     {
     MainView(Context aContext,Framework aFramework)
         {
@@ -55,20 +55,39 @@ public class MainView extends MapView implements DialogInterface.OnClickListener
         dialog.show();
         }
 
+    // handles routes calculated asynchronously
+    @Override
+    public void handler(int aResult, Route aRoute)
+        {
+        post(new Runnable()
+            {
+            public void run()
+                {
+                if (aResult == 0)
+                    m_framework.useRoute(aRoute,true);
+                else
+                    showError(Error.string(aResult));
+                }
+            });
+        }
+
     void calculateAndDisplayRoute()
         {
         if ((m_start_x == 0 && m_start_y == 0) || (m_end_x == 0 && m_end_y == 0))
             return;
-        int error = m_framework.startNavigation(m_start_x, m_start_y, CoordType.Degree, m_end_x, m_end_y, CoordType.Degree);
-        if (error == 0)
-            return;
-        switch (error)
-            {
-            case Error.NO_ROADS_NEAR_START_OF_ROUTE: showError("no roads near start of route"); break;
-            case Error.NO_ROADS_NEAR_END_OF_ROUTE: showError("no roads near end of route"); break;
-            case Error.NO_ROUTE_CONNECTIVITY: showError("start and end are not connected"); break;
-            default: showError("routing error, code " + error); break;
-            }
+
+        RouteCoordSet cs = new RouteCoordSet();
+        cs.coordType = CoordType.Degree;
+        cs.routePointArray = new RoutePoint[2];
+        cs.routePointArray[0] = new RoutePoint();
+        cs.routePointArray[0].x = m_start_x;
+        cs.routePointArray[0].y = m_start_y;
+        cs.routePointArray[1] = new RoutePoint();
+        cs.routePointArray[1].x = m_end_x;
+        cs.routePointArray[1].y = m_end_y;
+        int error = m_framework.createRouteAsync(this,new RouteProfile(m_route_profile_type),cs,true);
+        if (error != 0)
+            showError(Error.string(error));
         }
 
     void setRouteProfileType(RouteProfileType aType)
