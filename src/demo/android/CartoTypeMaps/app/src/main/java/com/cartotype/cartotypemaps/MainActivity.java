@@ -705,7 +705,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener
         m_framework.setScaleBar(new NoticePosition(NoticeAnchor.BottomLeft,width_in_inches,"in",0,null,0,null),null);
         Legend turn_legend = new Legend(m_framework,Legend.TurnStyle);
         turn_legend.setFontSize(14,"pt");
-        m_framework.setTurnInstructions(false,new NoticePosition(NoticeAnchor.TopLeft,width_in_inches,"in",0,null,0,null),turn_legend);
+        m_framework.setTurnInstructions(new NoticePosition(NoticeAnchor.TopLeft,width_in_inches,"in",0,null,0,null),turn_legend,false);
         }
 
     void setScaleBar(boolean aEnable)
