@@ -547,9 +547,6 @@ bool MapForm::event(QEvent* aEvent)
             QString text_qs;
             text_qs.setUtf16(text.Data(),(int)text.Length());
             m_main_window.statusBar()->showMessage(text_qs);
-
-            // Recreate the turn instructions to update the diagram colour.
-            CreateTurnInstructions();
             }
 
         m_main_window.UpdateManageRoute();
