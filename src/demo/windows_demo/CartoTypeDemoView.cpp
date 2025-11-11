@@ -1035,10 +1035,6 @@ LRESULT CCartoTypeDemoView::OnNewRoute(WPARAM wParam,LPARAM lParam)
             CartoType::String s = "route calculated";
             s.Append((uint16_t)0);
             main_window->SetMessageText((LPCTSTR)s.Data());
-
-            // Recreate the turn instructions to update the diagram colour.
-            CreateTurnInstructions();
-
             SimulateNavigationFix(false);
             }
 
