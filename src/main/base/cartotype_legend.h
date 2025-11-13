@@ -1,6 +1,6 @@
 /*
 cartotype_legend.h
-Copyright (C) 2015-2024 CartoType Ltd.
+Copyright (C) 2015-2025 CartoType Ltd.
 See www.cartotype.com for more information.
 */
 
@@ -43,10 +43,12 @@ class Legend: public MFrameworkObserver
     static constexpr uint32_t KStyleFlagMapObjects = 4;
     /** A style flag used in the constructor to add a scale bar. */
     static constexpr uint32_t KStyleFlagScaleBar = 8;
+    /** A style flag used in the constructor to add a height profile for the current route. */
+    static constexpr uint32_t KStyleFlagHeightProfile = 16;
     /** A style flag used in the constructor to use the style for turn instructions; the instructions themselves are not added. */
-    static constexpr uint32_t KStyleFlagTurnStyle = 16;
+    static constexpr uint32_t KStyleFlagTurnStyle = 32;
     /** A style flag used in the constructor to use the style for a scale bar; the scale bar itself is not added. */
-    static constexpr uint32_t KStyleFlagScaleStyle = 32;
+    static constexpr uint32_t KStyleFlagScaleStyle = 64;
     /** Style flags used in the constructor to select the standard style. */
     static constexpr uint32_t KStandardStyle = KStyleFlagTitle | KStyleFlagScaleInTitle | KStyleFlagMapObjects | KStyleFlagScaleBar;
     /**
@@ -70,6 +72,7 @@ class Legend: public MFrameworkObserver
     void AddTextLine(const String& aText);
     void AddScaleLine();
     void AddTurnLine(bool aAbbreviate);
+    void AddHeightProfileLine();
 
     void SetMainStyleSheet(const char* aData,size_t aLength);
     void SetExtraStyleSheet(const char* aData,size_t aLength);
@@ -82,11 +85,11 @@ class Legend: public MFrameworkObserver
     void SetFontStyle(uint32_t aFontStyle);
     void SetFontSize(double aFontSize,const char* aUnit);
     void SetTextColor(Color aTextColor);
-    void SetDiagramColor(Color aDiagramColor);
+    void SetDiagramColor(Color aColor);
     Color DiagramColor() const;
     void SetAlignment(Align aAlignment);
     void SetPolygonRotation(double aDegrees);
-    bool HasTurnInstruction() const;
+    bool UsesRoute() const;
     void SetTurnInstruction(const MString& aText);
     String TurnInstruction();
     uint32_t Serial() const;
@@ -101,10 +104,11 @@ class Legend: public MFrameworkObserver
     std::unique_ptr<Bitmap> CreateBitmapInternal(double aWidth,const char* aUnit,const Point& aTopLeft,uint32_t aScaleDenominator = 0);
     void Populate(uint32_t aStyle,const MString& aDataSetName);
     bool DrawScale(GraphicsContext& aGc,const LegendObjectParam& aParam,int32_t aX,int32_t aY,int32_t aWidth,Color aBlendColor,const Point& aTopLeft);
+    bool DrawHeightProfile(GraphicsContext& aGc,CMap& aMap,const LegendObjectParam& aParam,int32_t aX,int32_t aY,int32_t aWidth,Color aBlendColor);
     void Copy(const Legend& aOther);
 
     // virtual functions from MNavigatorObserver
-    void OnRoute(const Route* aRoute) override;
+    void OnRoute(std::shared_ptr<Route> aRoute) override;
     void OnTurn(const NavigatorTurn& aFirstTurn,const NavigatorTurn* aSecondTurn,const NavigatorTurn* aContinuationTurn,double aDistanceLeft,double aTimeLeft) override;
     void OnState(CartoTypeCore::NavigationState aState) override;
 
@@ -112,6 +116,9 @@ class Legend: public MFrameworkObserver
     std::weak_ptr<CMap> m_source_map; // the map on which the legend is to be overlaid: provides the scale and the blend style sheet; a weak ptr to avoid circular reference via CMap->CNoticeManager->Legend->CMap
     std::vector<LegendObjectParam> m_object_array;
     std::shared_ptr<ThreadSafeNavigationState> m_navigation_state;
+    std::vector<HeightProfilePoint> m_height_profile;
+    uint32_t m_route_serial = 0;
+
     Color m_background_color { KWhite };
     Color m_border_color { KGray };
     int32_t m_border_width_in_pixels { };
@@ -122,12 +129,15 @@ class Legend: public MFrameworkObserver
     FontSpec m_font_spec;
     Color m_color { KGrey };
     Color m_diagram_color { KDarkGrey };
+    Color m_route_color { KDarkGrey };
     Align m_alignment = Align::Left;
     double m_polygon_rotation { 0 };
     double m_metre { };
     double m_pt { };
     double m_inch { };
     bool m_has_scale = false;
+    bool m_has_turn = false;
+    bool m_has_height_profile = false;
     };
 
 }

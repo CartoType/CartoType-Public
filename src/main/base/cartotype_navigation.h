@@ -834,7 +834,7 @@ class MNavigatorObserver
     virtual ~MNavigatorObserver() { }
 
     /** This message updates the current route. */
-    virtual void OnRoute(const Route* /*aRoute*/) {  }
+    virtual void OnRoute(std::shared_ptr<Route> /*aRoute*/) {  }
 
     /**
     This message is sent asynchronously when a new route is created.

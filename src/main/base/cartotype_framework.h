@@ -476,6 +476,7 @@ class Framework: public MNavigatorObserver
 
     // terrain heights
     std::vector<int32_t> Heights(Result& aError,const CoordSet& aCoordSet,CoordType aCoordType) const;
+    std::vector<HeightProfilePoint> HeightProfile(Result& aError,const CartoTypeCore::Route& aRoute,double aIntervalinMeters = 0) const;
 
     // style sheet variables
     void SetStyleSheetVariable(const String& aVariableName,const String& aValue);
@@ -701,7 +702,7 @@ class Framework: public MNavigatorObserver
     CPerspectiveGraphicsContext* PerspectiveGc() const;
 
     // virtual functions from MNavigatorObserver
-    void OnRoute(const CartoTypeCore::Route* aRoute) override;
+    void OnRoute(std::shared_ptr<CartoTypeCore::Route> aRoute) override;
     void OnRouteAsync() override;
     void OnTurn(const NavigatorTurn& aFirstTurn,const NavigatorTurn* aSecondTurn,const NavigatorTurn* aContinuationTurn,
                 double aDistanceLeft,double aTimeLeft) override;

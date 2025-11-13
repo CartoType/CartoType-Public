@@ -281,7 +281,7 @@ class MapObject: public MPath
     used to convert from bitmap coordinates to map coordinates. If it is not
     supplied, it is calculated from the bitmap.
     */
-    bool GetHeight(Point aPoint,bool aHaveMetres,const AffineTransform* aInverseTransform,int32_t& aHeight) const;
+    bool GetHeight(const PointFP& aPoint,bool aHaveMetres,const AffineTransform* aInverseTransform,int32_t& aHeight) const;
     /** Returns the geocode type of a map object. */
     CartoTypeCore::GeoCodeType GeoCodeType() const;
     /** Returns information used when geocoding a map object. */

@@ -551,6 +551,22 @@ class TrackPoint: public PointFP
     double Time = 0;
     };
 
+/** A point on a height profile. */
+class HeightProfilePoint
+    {
+    public:
+    bool operator<(const HeightProfilePoint& aOther) const { return HeightInMeters < aOther.HeightInMeters; }
+
+    /** The position in degrees of longitude (X) and latitude (Y). */
+    PointFP PositionInDegrees;
+    /** The height above the standard datum (normalized sea level) in meters. */
+    int32_t HeightInMeters = 0;
+    /** The estimated travel time from the start of the route in seconds. */
+    double TimeInSeconds = 0;
+    /** The distance along the route from the start in meters. */
+    double DistanceInMeters = 0;
+    };
+
 /**
 A rectangle in two-dimensional space, aligned with the coordinate system and defined by
 opposite corners with minimum and maximum coordinates.
@@ -1164,21 +1180,27 @@ template<class DataType> double InterpolatedValue(const DataType* aDataStart,int
     if (x_fraction < 1)
         {
         double top_right_value = ReadBigEndian(aDataStart + index + aChannels);
-        if (top_right_value != aUnknownValue)
+        if (top_value == aUnknownValue)
+            top_value = top_right_value;
+        else if (top_right_value != aUnknownValue)
             top_value = top_value * x_fraction + top_right_value * (1.0 - x_fraction);
         }
     double value = top_value;
-    if (y_fraction < 1 && value != aUnknownValue)
+    if (y_fraction < 1)
         {
         index += aStride * aChannels;
         double bottom_value = ReadBigEndian(aDataStart + index);
         if (x_fraction < 1)
             {
             double bottom_right_value = ReadBigEndian(aDataStart + index + aChannels);
-            if (bottom_right_value != aUnknownValue)
+            if (bottom_value == aUnknownValue)
+                bottom_value = bottom_right_value;
+            else if (bottom_right_value != aUnknownValue)
                 bottom_value = bottom_value * x_fraction + bottom_right_value * (1.0 - x_fraction);
             }
-        if (bottom_value != aUnknownValue)
+        if (top_value == aUnknownValue)
+            value = bottom_value;
+        else if (bottom_value != aUnknownValue)
             value = top_value * y_fraction + bottom_value * (1.0 - y_fraction);
         }
     return value;

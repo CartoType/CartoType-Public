@@ -52,6 +52,8 @@ constexpr uint32_t KWhite = 0xFFFFFFFF;
 
 /** The 'null color' transparent black. */
 constexpr uint32_t KTransparentBlack = 0x00000000;
+/** The 'null color' transparent black. */
+constexpr uint32_t KNullColor = 0x00000000;
 
 /**
 A color.
