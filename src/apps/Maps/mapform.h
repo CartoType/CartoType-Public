@@ -53,6 +53,8 @@ class MapForm: public QOpenGLWidget
     bool HasRoute() const { return m_framework->Route() != nullptr; }
     void SetSimulateRouting(bool aSet);
     bool RoutingIsSimulated() const { return m_simulate_routing; }
+    void SetShowHeightProfile(bool aSet);
+    bool HeightProfileIsShown() const { return m_show_height_profile; }
     bool HasPushpins() const;
     size_t BuiltInProfileCount();
     const CartoType::RouteProfile* BuiltInProfile(size_t aIndex);
@@ -199,6 +201,7 @@ class MapForm: public QOpenGLWidget
     bool m_graphics_acceleration = false;           // true if rendering is to be done using OpenGL ES
     QTimer m_graphics_acceleration_update_timer;
     bool m_simulate_routing = false;
+    bool m_show_height_profile = false;
     bool m_edit_mode = false;
     bool m_debug_layers_enabled = false;
     bool m_fixed_labels = false;

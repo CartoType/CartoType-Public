@@ -126,6 +126,8 @@ MapForm::MapForm(QWidget* aParent,MainWindow& aMainWindow,
     EnableDrawScale(aSettings.m_draw_scale);
     EnableDrawRotator(aSettings.m_draw_rotator);
     EnableDrawRange(aSettings.m_draw_range);
+    SetSimulateRouting(aSettings.m_simulate_routing);
+    SetShowHeightProfile(aSettings.m_show_height_profile);
 
     // Start an async task to load navigation data.
     m_framework->LoadNavigationData();
@@ -158,7 +160,7 @@ MapForm::MapForm(QWidget* aParent,MainWindow& aMainWindow,
     m_framework->EnableLayer("county/historic",false);
 
     m_framework->SetFollowMode(CartoType::FollowMode::None);
-    m_framework->EnableTurnInstructions(m_simulate_routing);
+    m_framework->EnableTurnInstructions(m_simulate_routing || m_show_height_profile);
     CreateTurnInstructions();
 
     CreateLegend();
@@ -550,7 +552,6 @@ bool MapForm::event(QEvent* aEvent)
             }
 
         m_main_window.UpdateManageRoute();
-
         m_new_route_may_exist = false;
         m_new_route = nullptr;
         m_new_route_error = { };
@@ -830,7 +831,7 @@ void MapForm::LeftButtonUp(int32_t aX,int32_t aY,bool aShift)
     m_map_drag_offset.Y = aY - m_map_drag_anchor.Y;
 
     // Supply a simulated navigation fix.
-    if (m_simulate_routing && aShift && m_map_drag_offset.X == 0 && m_map_drag_offset.Y == 0)
+    if (m_simulate_routing && HasRoute() && aShift && m_map_drag_offset.X == 0 && m_map_drag_offset.Y == 0)
         {
         CartoType::NavigationData nav;
         nav.Validity = CartoType::NavigationData::KPositionValid | CartoType::NavigationData::KTimeValid;
@@ -1144,7 +1145,18 @@ void MapForm::CalculateAndDisplayRoute()
 
 void MapForm::CreateTurnInstructions()
     {
-    m_framework->SetTurnInstructions({CartoType::NoticeAnchor::TopLeft,40,"mm",15,"mm",4,"mm"});
+    CartoType::Result error;
+    uint32_t style = m_show_height_profile ? CartoType::Legend::KTurnStyle | CartoType::Legend::KStyleFlagHeightProfile : CartoType::Legend::KTurnStyle;
+    auto legend = CartoType::Legend::New(error,*m_framework,style);
+    if (error)
+        {
+        m_main_window.ShowError("error creating turn instructions",error);
+        return;
+        }
+    legend->SetBackgroundColor(CartoType::Color("#FFFC"));
+    legend->SetDiagramColor(CartoType::KGrey);
+    double width_in_mm = m_show_height_profile ? 100 : 50;
+    m_framework->SetTurnInstructions({CartoType::NoticeAnchor::TopLeft,width_in_mm,"mm",15,"mm",4,"mm"},std::move(legend));
     }
 
 void MapForm::Find()
@@ -1306,7 +1318,7 @@ void MapForm::ReverseRoute()
     if (!error)
         {
         std::reverse(m_route_point_array.begin(),m_route_point_array.end());
-        update();
+        CalculateAndDisplayRoute();
         }
     }
 
@@ -1329,9 +1341,23 @@ void MapForm::DeletePushpins()
 
 void MapForm::SetSimulateRouting(bool aSet)
     {
-    m_simulate_routing = aSet;
-    m_framework->EnableTurnInstructions(aSet);
-    update();
+    if (aSet != m_simulate_routing)
+        {
+        m_simulate_routing = aSet;
+        m_framework->EnableTurnInstructions(m_simulate_routing || m_show_height_profile);
+        update();
+        }
+    }
+
+void MapForm::SetShowHeightProfile(bool aSet)
+    {
+    if (aSet != m_show_height_profile)
+        {
+        m_show_height_profile = aSet;
+        CreateTurnInstructions();
+        m_framework->EnableTurnInstructions(m_simulate_routing || m_show_height_profile);
+        update();
+        }
     }
 
 bool MapForm::HasPushpins() const
@@ -1757,8 +1783,8 @@ void MapForm::SetMetricUnits(bool aEnable)
         {
         m_framework->SetMetricUnits(aEnable);
         CreateLegend();
-        if (DrawScaleEnabled())
-            update();
+        CreateTurnInstructions();
+        update();
         }
     }
 

@@ -25,6 +25,8 @@ class MapSettings
     bool m_draw_scale = false;
     bool m_draw_rotator = true;
     bool m_draw_range = false;
+    bool m_simulate_routing = false;
+    bool m_show_height_profile = false;
     };
 
 class MainWindow: public QMainWindow
@@ -107,6 +109,7 @@ class MainWindow: public QMainWindow
     void on_actionNight_Mode_triggered(bool aChecked);
     void on_actionMonochrome_triggered(bool aChecked);
     void on_actionSimulate_Routing_triggered(bool aChecked);
+    void on_actionHeight_Profile_triggered(bool aChecked);
 
     /*
     These are manually connected slots. I don't use the "on_" naming convention because

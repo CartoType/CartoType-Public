@@ -119,6 +119,8 @@ MainWindow::MainWindow(QWidget *parent) :
             map_settings.m_draw_scale = settings.value("drawScale",false).toBool();
             map_settings.m_draw_rotator = settings.value("drawRotator",true).toBool();
             map_settings.m_draw_range = settings.value("drawRange",false).toBool();
+            map_settings.m_simulate_routing = settings.value("simulateRouting",false).toBool();
+            map_settings.m_show_height_profile = settings.value("showHeightProfile",false).toBool();
 
             std::vector<QString> filename_array;
             int file_count = settings.beginReadArray("files");
@@ -229,7 +231,8 @@ void MainWindow::closeEvent(QCloseEvent* aEvent)
                 settings.setValue("drawScale",w->m_map_form->DrawScaleEnabled());
                 settings.setValue("drawRotator",w->m_map_form->DrawRotatorEnabled());
                 settings.setValue("drawRange",w->m_map_form->DrawRangeEnabled());
-
+                settings.setValue("simulateRouting",w->m_map_form->RoutingIsSimulated());
+                settings.setValue("showHeightProfile",w->m_map_form->HeightProfileIsShown());
                 settings.setValue("fileName",w->m_map_form->FileName(0)); // for backward compatibility
                 settings.beginWriteArray("files");
                 for (size_t i = 0; i < w->m_map_form->FileNameCount(); i++)
@@ -432,6 +435,17 @@ void MainWindow::on_actionAbout_CartoType_Maps_triggered()
                     }
                 s += r;
                 s += ".";
+                if (m->RouteDataHasGradients)
+                    s += "<br/>Route data has gradients.";
+                for (const auto& l : m->Layers)
+                    {
+                    CartoType::String l2 = l;
+                    if (l2.LayerMatch("terrain-height-metres/") || l2.LayerMatch("terrain-height-feet/"))
+                        {
+                        s += "<br/>Height data is available.";
+                        break;
+                        }
+                    }
                 }
             }
 
@@ -679,8 +693,8 @@ void MainWindow::UpdateManageRoute()
     m_ui->actionSave_Route_Instructions->setEnabled(has_route);
     m_ui->actionSave_Route_as_GPX->setEnabled(has_route);
     m_ui->actionView_Route_Instructions->setEnabled(has_route);
-    m_ui->actionSimulate_Routing->setEnabled(has_route);
     m_ui->actionSimulate_Routing->setChecked(m_map_form->RoutingIsSimulated());
+    m_ui->actionHeight_Profile->setChecked(m_map_form->HeightProfileIsShown());
     }
 
 void MainWindow::UpdateDeletePushpins()
@@ -1128,6 +1142,12 @@ void MainWindow::on_actionSimulate_Routing_triggered(bool aChecked)
         m_map_form->SetSimulateRouting(aChecked);
     }
 
+void MainWindow::on_actionHeight_Profile_triggered(bool aChecked)
+    {
+    if (m_map_form)
+        m_map_form->SetShowHeightProfile(aChecked);
+    }
+
 void MainWindow::on_actionEnable_debug_layers_changed()
     {
     if (m_map_form)
@@ -1139,5 +1159,4 @@ void MainWindow::on_actionFixed_Labels_changed()
     if (m_map_form)
         m_map_form->EnableFixedLabels(m_ui->actionFixed_Labels->isChecked());
     }
-
 

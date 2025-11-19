@@ -99,6 +99,7 @@
     <addaction name="actionSave_Custom_Route_Profile"/>
     <addaction name="actionLoad_Custom_Route_Profile"/>
     <addaction name="actionSimulate_Routing"/>
+    <addaction name="actionHeight_Profile"/>
    </widget>
    <widget class="QMenu" name="menuStyle">
     <property name="title">
@@ -529,7 +530,7 @@
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Simulate Routing</string>
@@ -570,6 +571,20 @@
    </property>
    <property name="text">
     <string>Monochrome</string>
+   </property>
+  </action>
+  <action name="actionHeight_Profile">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Height Profile</string>
+   </property>
+   <property name="toolTip">
+    <string>shows height profile in turn instructions if available</string>
    </property>
   </action>
  </widget>
