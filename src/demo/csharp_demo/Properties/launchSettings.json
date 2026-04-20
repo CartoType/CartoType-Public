@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CartoTypeDemo": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
