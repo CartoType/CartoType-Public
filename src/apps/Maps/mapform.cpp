@@ -168,7 +168,10 @@ MapForm::MapForm(QWidget* aParent,MainWindow& aMainWindow,
     m_framework->SetAnimateTransitions(true);
 
     // Create the initial map image.
-    m_map_image = std::make_unique<QImage>(rect.width(),rect.height(),QImage::Format_ARGB32_Premultiplied);
+    int physical_w = CartoType::Round(rect.width() * m_device_pixel_ratio);
+    int physical_h = CartoType::Round(rect.height() * m_device_pixel_ratio);
+    m_map_image = std::make_unique<QImage>(physical_w, physical_h, QImage::Format_ARGB32_Premultiplied);
+    m_map_image->setDevicePixelRatio(m_device_pixel_ratio);
 
     m_ui->perspective_slider->hide();
     }
@@ -231,6 +234,7 @@ void MapForm::resizeEvent(QResizeEvent* aEvent)
 
         m_framework->Resize(w,h);
         m_map_image = std::make_unique<QImage>(w,h,QImage::Format_ARGB32_Premultiplied);
+        m_map_image->setDevicePixelRatio(m_device_pixel_ratio);
         }
 
     static bool first = true;
