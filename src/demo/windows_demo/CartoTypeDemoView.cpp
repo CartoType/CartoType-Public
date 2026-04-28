@@ -223,9 +223,13 @@ void CCartoTypeDemoView::CreateTurnInstructions()
 
 void CCartoTypeDemoView::OnDraw(CDC* pDC)
     {
-    // No need to do anything if the map renderer is in use; it draws the map using OpenGL 30 times a second.
     if (m_map_renderer)
+        {
+        // The map renderer ignores manual draws if its background thread is active.
+        // If the thread is paused (for a background window), this forces a single frame update.
+        m_map_renderer->Draw();
         return;
+        }
 
     RECT clip;
     pDC->GetClipBox(&clip);
@@ -969,14 +973,14 @@ void CCartoTypeDemoView::OnInitialUpdate()
         }
     m_framework->SetVehiclePosOffset(0,0.25);
     m_framework->SetAnimateTransitions(true);
-    //m_framework->SetDraw3DBuildings(true);
+    m_framework->SetDraw3DBuildings(true);
     CartoType::PerspectiveParam pp;
     pp.DeclinationDegrees = 30;
     m_framework->SetPerspectiveParam(pp);
     m_framework->SetFixedLabels(true);
 
     // Add a call to m_framework->SetResolutionDpi to set the pixel size. The default resolution is 144dpi, which works well on Windows.
-    // m_framework->SetResolutionDpi(144);
+    m_framework->SetResolutionDpi(144);
     
     // COMMENT OUT THE NEXT LINE TO DISABLE GRAPHICS ACCELERATION
     m_map_renderer = CartoType::MapRenderer::New(error,*m_framework,m_hWnd);
@@ -987,6 +991,13 @@ void CCartoTypeDemoView::OnInitialUpdate()
         }
  
     //TestCode();
+    }
+
+void CCartoTypeDemoView::OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactiveView)
+    {
+    CView::OnActivateView(bActivate,pActivateView,pDeactiveView);
+    if (m_map_renderer)
+        m_map_renderer->Enable(bActivate != FALSE);
     }
 
 static std::shared_ptr<CartoType::Route> CreateSnappedRoute(CartoType::Result& aError,CartoType::Framework& aFramework,

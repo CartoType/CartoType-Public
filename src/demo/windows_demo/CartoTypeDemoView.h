@@ -36,6 +36,7 @@ public:
     virtual void OnDraw(CDC* pDC);  // overridden to draw this view
     virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
+    virtual void OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactiveView);
 
 protected:
 
