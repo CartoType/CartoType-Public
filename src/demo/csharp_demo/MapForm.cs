@@ -126,6 +126,16 @@ namespace CartoTypeDemo
             MainMenuStrip?.Hide();
         }
 
+        private void MapForm_Activated(object sender, EventArgs e)
+        {
+            m_map_renderer?.Enable(true);
+        }
+
+        private void MapForm_Deactivate(object sender, EventArgs e)
+        {
+            m_map_renderer?.Enable(false);
+        }
+
         private void MapForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (m_writable_map_changed && !m_framework.MapIsEmpty(m_writable_map_handle))

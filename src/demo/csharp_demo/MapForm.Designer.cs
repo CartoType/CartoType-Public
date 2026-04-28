@@ -320,6 +320,8 @@
             MainMenuStrip = mapMenu;
             Name = "MapForm";
             Text = "MapForm";
+            Activated += MapForm_Activated;
+            Deactivate += MapForm_Deactivate;
             FormClosing += MapForm_FormClosing;
             Load += MapForm_Load;
             ClientSizeChanged += MapForm_ClientSizeChanged;
