@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
 <!--
-Copyright (C) 2020-2023 CartoType Ltd.
+Copyright (C) 2020-2026 CartoType Ltd.
 For more information see http://www.cartotype.com.
 -->
 
@@ -590,7 +590,7 @@ For more information see http://www.cartotype.com.
                 <condition exp='@feature_type in { "cmr","ind" }'>
                     <shape fill='lavender+white'/>
                 </condition>
-                <condition exp='@feature_type in { "par","gol","com" }'>
+                <condition exp='@feature_type in { "par","gol","com","gdn" }'>
                     <shape fill='lightgreen' opacity='0.3'/>
                 </condition>
             </scale>
@@ -957,7 +957,7 @@ For more information see http://www.cartotype.com.
         <layer name='building'>
             <condition exp='_has_parts'>
                 <scale max='6000'>
-                    <shape border='lightgrey+black' borderWidth='0.5pt' fill='lightgrey+burlywood' opacity='0.5'/>
+                    <shape border='lightgrey' borderWidth='0.5pt' fill='lightgrey+burlywood+0.5white'/>
                     <label case='assume-title' color='grey' font-size='8m,4pt,7pt' glow='white' glowWidth='5%,0.5pt' labelFormat=';int_name;name:en+{font-style:italic}"&#10;"name:en+" "addr:housenumber+" "addr:housename' priority='1' wrapWidth='10em'/>
                 </scale>
                 <scale min='6000'>
@@ -966,11 +966,11 @@ For more information see http://www.cartotype.com.
             </condition>
             <condition exp='!_has_parts'>
                 <scale max='6000'>
-                    <shape height='yes' border='lightgrey+black' borderWidth='0.5pt' fill='lightgrey+burlywood' opacity='0.5'/>
+                    <shape height='yes' border='lightgrey' borderWidth='0.5pt' fill='lightgrey+burlywood+0.5white'/>
                     <label case='assume-title' color='grey' font-size='8m,4pt,7pt' glow='white' glowWidth='5%,0.5pt' labelFormat=';int_name;name:en+{font-style:italic}"&#10;"name:en+" "addr:housenumber+" "addr:housename' priority='1' wrapWidth='10em'/>
                 </scale>
                 <scale min='6000'>
-                    <shape height='yes' fill='lightgrey+burlywood' opacity='0.5'/>
+                    <shape height='yes' fill='lightgrey+burlywood+0.5white'/>
                 </scale>
             </condition>
             <condition exp='@=0'>
@@ -1123,6 +1123,32 @@ For more information see http://www.cartotype.com.
             </scale>
         </layer>
     </scale>
+
+    <scale max='40000'>
+        <layer name='power/major'>
+            <scale max='20000'>
+                <condition exp='@=0'>
+                <icon ref='dot-icon' color='lightgrey+burlywood' />
+                </condition>
+            </scale>
+            <condition exp='@!=0'>
+                <line fill='lightgrey+burlywood+0.5white' width='2m,1pt,2pt'/>
+                <shape fill='lightgrey+burlywood' opacity='0.4'/>
+            </condition>
+        </layer>
+    </scale>
+    <scale max='20000'>
+        <layer name='power/minor'>
+            <condition exp='@=0'>
+                <icon ref='dot-icon' color='lightgrey+burlywood' />
+            </condition>
+            <condition exp='@!=0'>
+                <line fill='lightgrey+burlywood+0.5white' width='0.5m,0.5pt,1pt'/>
+                <shape fill='lightgrey+burlywood' opacity='0.4'/>
+            </condition>
+        </layer>
+    </scale>
+
     <layer name='graticule'>
         <condition exp='_interval ge 5'>
             <line fill='lightblue+0.1black' width='0.7pt'/>
