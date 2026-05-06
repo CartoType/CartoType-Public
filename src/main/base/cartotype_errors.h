@@ -369,8 +369,11 @@ constexpr Result KErrorMapAlreadyLoaded = 73;
 /** A route supplied as part of a traffic event (road closure or speed limit) caould not be matched to the map. */
 constexpr Result KErrorTrafficEventRouteNotMatched = 74;
 
+/** An expression variable is not allowed in the current context. For example, '@area' is not allowed in import rules. */
+constexpr Result KErrorExpressionVariableNotAllowed = 75;
+
 /** The number of standard error codes. */
-constexpr int32_t KStandardErrorCodeCount = 75;
+constexpr int32_t KStandardErrorCodeCount = 76;
 
 /** Returns a short English description of a result, given its code. */
 std::string ResultString(uint32_t aResultCode);

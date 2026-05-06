@@ -87,9 +87,6 @@ MapForm::MapForm(QWidget* aParent,MainWindow& aMainWindow,
     m_framework = CartoType::Framework::New(error,param);
     if (!error)
         {
-        auto dpi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
-        m_framework->SetResolutionDpi(dpi);
-
         error = m_framework->CreateWritableMap(CartoType::WritableMapType::Memory);
         m_writable_map_handle = m_framework->LastMapHandle();
         if (!error)
