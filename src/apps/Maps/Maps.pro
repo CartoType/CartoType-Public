@@ -119,6 +119,13 @@ win32: RC_ICONS = CT_Arrow-RGB.ico
 
 ICON = CartoTypeMacMaps.icns
 
+# Fixes for modern macOS SDK compatibility
+macx
+    {
+    QMAKE_LIBS_OPENGL = -framework OpenGL
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 11.0
+    }
+
 win32:debug: CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../bin/17.0/x64/DebugDLL/ -lcartotype -lwinhttp -L$$PWD/../../main/platform/qt/CartoTypeQtMapRenderer/build64/debug -lCartoTypeQtMapRenderer
 win32:release: CONFIG(release, debug|release): LIBS += -L$$PWD/../../../bin/17.0/x64/ReleaseDLL/ -lcartotype -lwinhttp -L$$PWD/../../main/platform/qt/CartoTypeQtMapRenderer/build64/release -lCartoTypeQtMapRenderer
 
