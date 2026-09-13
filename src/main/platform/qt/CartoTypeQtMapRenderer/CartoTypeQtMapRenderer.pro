@@ -34,8 +34,7 @@ SOURCES += cartotype_qt_map_renderer.cpp \
 
 HEADERS += cartotype_qt_map_renderer.h
 
-unix
-    {
+unix {
     target.path = /usr/lib
     INSTALLS += target
     }
