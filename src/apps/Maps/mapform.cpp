@@ -205,11 +205,7 @@ void MapForm::SetView(const CartoType::ViewState& aViewState)
     m_main_window.UpdateNorthUp();
     m_ui->perspective_slider->setValue((int)m_framework->PerspectiveParam().DeclinationDegrees);
     if (m_framework->Perspective())
-        {
-#ifndef Q_OS_MAC // vertical sliders don't work properly on Mac: see QTBUG-57194: QSlider in orientation vertical fill display inverted on Mac X.12
         m_ui->perspective_slider->show();
-#endif
-        }
     else
         m_ui->perspective_slider->hide();
     m_main_window.UpdatePerspective();
@@ -265,8 +261,8 @@ void MapForm::paintEvent(QPaintEvent* aEvent)
 
 void MapForm::mousePressEvent(QMouseEvent* aEvent)
     {
-    auto x = CartoType::Round(aEvent->x() * m_device_pixel_ratio);
-    auto y = CartoType::Round(aEvent->y() * m_device_pixel_ratio);
+    auto x = CartoType::Round(aEvent->position().x() * m_device_pixel_ratio);
+    auto y = CartoType::Round(aEvent->position().y() * m_device_pixel_ratio);
     if (aEvent->button() == Qt::MouseButton::LeftButton)
         LeftButtonDown(x,y);
     else if (aEvent->button() == Qt::MouseButton::RightButton)
@@ -294,7 +290,7 @@ void MapForm::mouseDoubleClickEvent(QMouseEvent* aEvent)
     if (aEvent->button() != Qt::MouseButton::LeftButton)
         return;
 
-    CartoType::PointFP p(aEvent->x() * m_device_pixel_ratio,aEvent->y() * m_device_pixel_ratio);
+    CartoType::PointFP p(aEvent->position().x() * m_device_pixel_ratio,aEvent->position().y() * m_device_pixel_ratio);
     if (!m_edit_mode)
         {
         if (m_framework->EditSelectNearestPoint(p,2) == CartoType::KErrorNone)
@@ -329,8 +325,8 @@ void MapForm::mouseDoubleClickEvent(QMouseEvent* aEvent)
 
 void MapForm::mouseReleaseEvent(QMouseEvent* aEvent)
     {
-    auto x = CartoType::Round(aEvent->x() * m_device_pixel_ratio);
-    auto y = CartoType::Round(aEvent->y() * m_device_pixel_ratio);
+    auto x = CartoType::Round(aEvent->position().x() * m_device_pixel_ratio);
+    auto y = CartoType::Round(aEvent->position().y() * m_device_pixel_ratio);
 
     if (aEvent->button() == Qt::MouseButton::LeftButton)
         LeftButtonUp(x,y,aEvent->modifiers() == Qt::ShiftModifier);
@@ -340,8 +336,8 @@ void MapForm::mouseReleaseEvent(QMouseEvent* aEvent)
 
 void MapForm::mouseMoveEvent(QMouseEvent* aEvent)
     {
-    auto x = CartoType::Round(aEvent->x() * m_device_pixel_ratio);
-    auto y = CartoType::Round(aEvent->y() * m_device_pixel_ratio);
+    auto x = CartoType::Round(aEvent->position().x() * m_device_pixel_ratio);
+    auto y = CartoType::Round(aEvent->position().y() * m_device_pixel_ratio);
 
     if (m_edit_mode)
         {
@@ -1861,9 +1857,7 @@ void MapForm::SetPerspective(bool aEnable)
         if (aEnable)
             {
             m_framework->SetPerspective(true);
-#ifndef Q_OS_MAC // vertical sliders don't work properly on Mac: see QTBUG-57194: QSlider in orientation vertical fill display inverted on Mac X.12
             m_ui->perspective_slider->show();
-#endif
             }
         else
             {

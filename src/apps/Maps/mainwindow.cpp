@@ -8,10 +8,11 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
 
 #include <fstream>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget* parent):
     QMainWindow(parent),
     m_ui(new Ui::MainWindow),
     m_app_path(QCoreApplication::applicationDirPath())
@@ -28,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_recent_file_separator = m_ui->menuFile->addSeparator();
     for (int i = 0; i < KMaxRecentFiles; i++)
         {
-        m_recent_file_action[i] = new QAction(this);
+        m_recent_file_action[i] = new RecentFileAction(this);
         m_recent_file_action[i]->setVisible(false);
         connect(m_recent_file_action[i],SIGNAL(triggered()),this,SLOT(OpenRecentFileTriggered()));
         m_ui->menuFile->addAction(m_recent_file_action[i]);
@@ -56,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Find the default style sheet.
     Paths are searched in this order:
     the application directory;
+    a directory 'Resources' that is a sibling of the application directory
     the subdirectory "style" of the application directory;
     the directory "CartoType/src/style" in the development tree.
     */
@@ -63,9 +65,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QString style_sheet_path = m_app_path + style_sheet_name;
     if (!QFileInfo::exists(style_sheet_path))
         {
-        style_sheet_path = m_app_path + "style/" + style_sheet_name;
+        style_sheet_path = m_app_path + "../Resources/" + style_sheet_name;
         if (!QFileInfo::exists(style_sheet_path))
-            style_sheet_path = m_cartotype_source_path + "style/" + style_sheet_name;
+            {
+            style_sheet_path = m_app_path + "style/" + style_sheet_name;
+            if (!QFileInfo::exists(style_sheet_path))
+                style_sheet_path = m_cartotype_source_path + "style/" + style_sheet_name;
+            }
         }
     m_default_style_sheet_path.Set(style_sheet_path.utf16(),style_sheet_path.length());
 
@@ -83,12 +89,11 @@ MainWindow::MainWindow(QWidget *parent) :
         QString p = QCoreApplication::arguments().at(i);
         if (p[0] != '-')
             {
-            LoadMap({p});
+            LoadMap({ p });
             map_loaded = true;
             }
         }
 
-    // If the main window geometry, and the geometry and states of the child windows, have been saved, restore those settings.
     QSettings settings;
     if (!map_loaded)
         {
@@ -100,7 +105,6 @@ MainWindow::MainWindow(QWidget *parent) :
         else
             restoreGeometry(main_window_geometry);
 
-        // Open the saved map windows.
         int saved_map_window_count = settings.beginReadArray("mapWindows");
         for (int index = 0; index < saved_map_window_count; index++)
             {
@@ -139,12 +143,14 @@ MainWindow::MainWindow(QWidget *parent) :
         settings.endArray();
         }
 
-    // Load the first file from the recent file list, or if there aren't any, show a welcome message.
-    QStringList files = settings.value("recentFileList").toStringList();
     if (!map_loaded)
         {
-        if (files.size() > 0)
-            LoadMap({ *files.begin() });
+        std::vector<FileDetails> recent_details = ReadRecentFileDetails(settings);
+        if (!recent_details.empty())
+            {
+            const auto& details = recent_details[0];
+            LoadMap(details.m_files,&details.m_geometry,&details.m_view_state,&details.m_map_settings);
+            }
         else
             QMessageBox::about(this,"Welcome to CartoType Maps","The <b>CartoType Maps</b> app allows you to view maps, calculate routes, find places, and more.<br/><br/>"
                                "Please open a map (a .ctm1 file). Some sample maps were provided with this application. "
@@ -173,6 +179,108 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
     {
     delete m_ui;
+    }
+
+std::vector<FileDetails> MainWindow::ReadRecentFileDetails(QSettings& aSettings)
+    {
+    std::vector<FileDetails> list;
+    if (aSettings.contains("recentFileDetails/size"))
+        {
+        int count = aSettings.beginReadArray("recentFileDetails");
+        for (int index = 0; index < count; index++)
+            {
+            aSettings.setArrayIndex(index);
+            FileDetails details;
+            details.m_geometry = aSettings.value("geometry").toByteArray();
+            details.m_view_state = aSettings.value("viewState").toString();
+
+            details.m_map_settings.m_metric_units = aSettings.value("metricUnits",true).toBool();
+            details.m_map_settings.m_night_mode = aSettings.value("nightMode",false).toBool();
+            details.m_map_settings.m_monochrome = aSettings.value("monochrome",false).toBool();
+            details.m_map_settings.m_debug_layers = aSettings.value("debugLayers",false).toBool();
+            details.m_map_settings.m_fixed_labels = aSettings.value("fixedLabels",false).toBool();
+            details.m_map_settings.m_draw_3d_buildings = aSettings.value("draw3DBuildings",false).toBool();
+            details.m_map_settings.m_draw_legend = aSettings.value("drawLegend",false).toBool();
+            details.m_map_settings.m_draw_scale = aSettings.value("drawScale",false).toBool();
+            details.m_map_settings.m_draw_rotator = aSettings.value("drawRotator",true).toBool();
+            details.m_map_settings.m_draw_range = aSettings.value("drawRange",false).toBool();
+            details.m_map_settings.m_simulate_routing = aSettings.value("simulateRouting",false).toBool();
+            details.m_map_settings.m_show_height_profile = aSettings.value("showHeightProfile",false).toBool();
+
+            int file_count = aSettings.beginReadArray("files");
+            for (int file_index = 0; file_index < file_count; file_index++)
+                {
+                aSettings.setArrayIndex(file_index);
+                details.m_files.push_back(aSettings.value("name").toString());
+                }
+            aSettings.endArray();
+            aSettings.setArrayIndex(index);
+
+            if (file_count == 0)
+                {
+                QString file_name = aSettings.value("fileName").toString();
+                if (!file_name.isEmpty())
+                    details.m_files.push_back(file_name);
+                }
+
+            if (!details.m_files.empty())
+                list.push_back(details);
+            }
+        aSettings.endArray();
+        }
+    else
+        {
+        QStringList files = aSettings.value("recentFileList").toStringList();
+        for (const QString& file : files)
+            {
+            FileDetails details;
+            details.m_files.push_back(file);
+            list.push_back(details);
+            }
+        }
+    return list;
+    }
+
+void MainWindow::SaveRecentFileDetails(QSettings& aSettings,const std::vector<FileDetails>& aDetailsList)
+    {
+    aSettings.beginWriteArray("recentFileDetails");
+    for (size_t index = 0; index < aDetailsList.size(); index++)
+        {
+        aSettings.setArrayIndex(int(index));
+        const FileDetails& details = aDetailsList[index];
+        aSettings.setValue("geometry",details.m_geometry);
+        aSettings.setValue("viewState",details.m_view_state);
+        aSettings.setValue("metricUnits",details.m_map_settings.m_metric_units);
+        aSettings.setValue("nightMode",details.m_map_settings.m_night_mode);
+        aSettings.setValue("monochrome",details.m_map_settings.m_monochrome);
+        aSettings.setValue("debugLayers",details.m_map_settings.m_debug_layers);
+        aSettings.setValue("fixedLabels",details.m_map_settings.m_fixed_labels);
+        aSettings.setValue("draw3DBuildings",details.m_map_settings.m_draw_3d_buildings);
+        aSettings.setValue("drawLegend",details.m_map_settings.m_draw_legend);
+        aSettings.setValue("drawScale",details.m_map_settings.m_draw_scale);
+        aSettings.setValue("drawRotator",details.m_map_settings.m_draw_rotator);
+        aSettings.setValue("drawRange",details.m_map_settings.m_draw_range);
+        aSettings.setValue("simulateRouting",details.m_map_settings.m_simulate_routing);
+        aSettings.setValue("showHeightProfile",details.m_map_settings.m_show_height_profile);
+
+        aSettings.beginWriteArray("files");
+        for (size_t file_index = 0; file_index < details.m_files.size(); file_index++)
+            {
+            aSettings.setArrayIndex(int(file_index));
+            aSettings.setValue("name",details.m_files[file_index]);
+            }
+        aSettings.endArray();
+        }
+    aSettings.endArray();
+
+    QStringList files;
+    for (const auto& details : aDetailsList)
+        {
+        if (!details.m_files.empty())
+            files.append(details.m_files[0]);
+        }
+    aSettings.setValue("recentFileList",files);
+    aSettings.sync();
     }
 
 void MainWindow::closeEvent(QCloseEvent* aEvent)
@@ -246,6 +354,44 @@ void MainWindow::closeEvent(QCloseEvent* aEvent)
             }
         settings.endArray();
 
+        std::vector<FileDetails> recent_details = ReadRecentFileDetails(settings);
+        for (const auto p : sub_window_list)
+            {
+            MapChildWindow* w = dynamic_cast<MapChildWindow*>(p);
+            if (w->m_map_form && w->m_map_form->FileNameCount() > 0)
+                {
+                FileDetails details;
+                for (size_t i = 0; i < w->m_map_form->FileNameCount(); i++)
+                    details.m_files.push_back(w->m_map_form->FileName(i));
+                details.m_geometry = w->saveGeometry();
+                details.m_view_state = w->m_map_form->ViewState();
+                details.m_map_settings.m_metric_units = w->m_map_form->MetricUnits();
+                details.m_map_settings.m_night_mode = w->m_map_form->NightMode();
+                details.m_map_settings.m_monochrome = w->m_map_form->Monochrome();
+                details.m_map_settings.m_debug_layers = w->m_map_form->DebugLayers();
+                details.m_map_settings.m_fixed_labels = w->m_map_form->FixedLabels();
+                details.m_map_settings.m_draw_3d_buildings = w->m_map_form->Draw3DBuildings();
+                details.m_map_settings.m_draw_legend = w->m_map_form->DrawLegendEnabled();
+                details.m_map_settings.m_draw_scale = w->m_map_form->DrawScaleEnabled();
+                details.m_map_settings.m_draw_rotator = w->m_map_form->DrawRotatorEnabled();
+                details.m_map_settings.m_draw_range = w->m_map_form->DrawRangeEnabled();
+                details.m_map_settings.m_simulate_routing = w->m_map_form->RoutingIsSimulated();
+                details.m_map_settings.m_show_height_profile = w->m_map_form->HeightProfileIsShown();
+
+                auto iter = std::find_if(recent_details.begin(),recent_details.end(),[&details](const FileDetails& aItem)
+                                         {
+                                         return !aItem.m_files.empty() && !details.m_files.empty() && aItem.m_files[0] == details.m_files[0];
+                                         });
+                if (iter != recent_details.end())
+                    *iter = details;
+                else
+                    recent_details.insert(recent_details.begin(),details);
+                }
+            }
+        if (recent_details.size() > KMaxRecentFiles)
+            recent_details.resize(KMaxRecentFiles);
+        SaveRecentFileDetails(settings,recent_details);
+
         aEvent->accept();
         }
     else
@@ -254,14 +400,17 @@ void MainWindow::closeEvent(QCloseEvent* aEvent)
 
 void MainWindow::OpenRecentFileTriggered()
     {
-    QAction *action = qobject_cast<QAction*>(sender());
+    RecentFileAction* action = qobject_cast<RecentFileAction*>(sender());
     if (action)
-        LoadMap({ action->data().toString() });
+        LoadMap(action->m_file_details.m_files,
+                &action->m_file_details.m_geometry,
+                &action->m_file_details.m_view_state,
+                &action->m_file_details.m_map_settings);
     }
 
 void MainWindow::SetRouteProfileTriggered()
     {
-    QAction *action = qobject_cast<QAction*>(sender());
+    QAction* action = qobject_cast<QAction*>(sender());
     size_t index = 0;
     bool found = false;
     for (auto p : m_route_profile_action)
@@ -364,28 +513,90 @@ void MainWindow::LoadMap(const std::vector<QString>& aPathArray,
         SetWindowState(w);
 
         QSettings settings;
-        QStringList files = settings.value("recentFileList").toStringList();
-        files.removeAll(aPathArray[0]);
-        files.prepend(aPathArray[0]);
-        while (files.size() > KMaxRecentFiles)
-            files.removeLast();
-        settings.setValue("recentFileList",files);
-        settings.sync();
+        FileDetails new_details;
+        new_details.m_files = aPathArray;
+        if (aWindowGeometry)
+            new_details.m_geometry = *aWindowGeometry;
+        if (aViewState)
+            new_details.m_view_state = *aViewState;
+        if (aMapSettings)
+            new_details.m_map_settings = *aMapSettings;
+
+        std::vector<FileDetails> recent_details = ReadRecentFileDetails(settings);
+        auto iter = std::find_if(recent_details.begin(),recent_details.end(),[&aPathArray](const FileDetails& aItem)
+                                 {
+                                 return !aItem.m_files.empty() && aItem.m_files[0] == aPathArray[0];
+                                 });
+        if (iter != recent_details.end())
+            recent_details.erase(iter);
+        recent_details.insert(recent_details.begin(),new_details);
+        if (recent_details.size() > KMaxRecentFiles)
+            recent_details.resize(KMaxRecentFiles);
+
+        SaveRecentFileDetails(settings,recent_details);
 
         UpdateRecentFiles();
         UpdateRouteProfileMenuItems();
         }
     }
 
-void MainWindow::OnMapFormDestroyed(MapForm* /*aMapForm*/)
+void MainWindow::OnMapFormDestroyed(MapForm* aMapForm)
     {
+    if (aMapForm && aMapForm->FileNameCount() > 0)
+        {
+        FileDetails details;
+        for (size_t i = 0; i < aMapForm->FileNameCount(); i++)
+            details.m_files.push_back(aMapForm->FileName(i));
+
+        QWidget* p = aMapForm->parentWidget();
+        MapChildWindow* w = nullptr;
+        while (p && !w)
+            {
+            w = dynamic_cast<MapChildWindow*>(p);
+            p = p->parentWidget();
+            }
+
+        if (w)
+            details.m_geometry = w->saveGeometry();
+
+        details.m_view_state = aMapForm->ViewState();
+        details.m_map_settings.m_metric_units = aMapForm->MetricUnits();
+        details.m_map_settings.m_night_mode = aMapForm->NightMode();
+        details.m_map_settings.m_monochrome = aMapForm->Monochrome();
+        details.m_map_settings.m_debug_layers = aMapForm->DebugLayers();
+        details.m_map_settings.m_fixed_labels = aMapForm->FixedLabels();
+        details.m_map_settings.m_draw_3d_buildings = aMapForm->Draw3DBuildings();
+        details.m_map_settings.m_draw_legend = aMapForm->DrawLegendEnabled();
+        details.m_map_settings.m_draw_scale = aMapForm->DrawScaleEnabled();
+        details.m_map_settings.m_draw_rotator = aMapForm->DrawRotatorEnabled();
+        details.m_map_settings.m_draw_range = aMapForm->DrawRangeEnabled();
+        details.m_map_settings.m_simulate_routing = aMapForm->RoutingIsSimulated();
+        details.m_map_settings.m_show_height_profile = aMapForm->HeightProfileIsShown();
+
+        QSettings settings;
+        std::vector<FileDetails> recent_details = ReadRecentFileDetails(settings);
+        auto iter = std::find_if(recent_details.begin(),recent_details.end(),[&details](const FileDetails& aItem)
+                                 {
+                                 return !aItem.m_files.empty() && !details.m_files.empty() && aItem.m_files[0] == details.m_files[0];
+                                 });
+        if (iter != recent_details.end())
+            *iter = details;
+        else
+            recent_details.insert(recent_details.begin(),details);
+
+        if (recent_details.size() > KMaxRecentFiles)
+            recent_details.resize(KMaxRecentFiles);
+
+        SaveRecentFileDetails(settings,recent_details);
+        UpdateRecentFiles();
+        }
     }
 
 void MainWindow::on_actionAbout_CartoType_Maps_triggered()
     {
     QString text = "The <b>CartoType Maps</b> app allows you to view maps, calculate routes, find places, and more.<br/><br/>"
-                   "See <a href='https://www.cartotype.com'>cartotype.com</a> for information about creating maps, using the API, and licensing CartoType for your application.<br/><br/>"
-                   "Application created using CartoType ";
+        "See <a href='https://www.cartotype.com'>cartotype.com</a> for information about creating maps, using the API, and licensing CartoType for your application.<br/><br/>"
+        "Application created using CartoType ";
     text += QString(CartoType::Version()) + "." + CartoType::Build() + ".";
 
     if (m_map_form)
@@ -466,9 +677,13 @@ CartoType::String MainWindow::FontPath(const char* aFontName) const
     QString font_path(m_app_path + aFontName);
     if (!QFileInfo::exists(font_path))
         {
-        font_path = m_app_path + "font/" + aFontName;
+        font_path = m_app_path + "../Resources/" + aFontName;
         if (!QFileInfo::exists(font_path))
-            font_path = m_cartotype_source_path + "font/" + aFontName;
+            {
+            font_path = m_app_path + "font/" + aFontName;
+            if (!QFileInfo::exists(font_path))
+                font_path = m_cartotype_source_path + "font/" + aFontName;
+            }
         }
     assert(sizeof(QChar) == sizeof(uint16_t));
     CartoType::String path;
@@ -492,8 +707,8 @@ void MainWindow::ShowError(const char* aMessage,int aErrorCode)
         {
         QString text(aMessage);
         QMessageBox::information(this,"Information",text);
+        }
     }
-}
 
 void MainWindow::on_mdiArea_subWindowActivated(QMdiSubWindow* aSubWindow)
     {
@@ -587,15 +802,22 @@ void MainWindow::EnableMenuItems()
 void MainWindow::UpdateRecentFiles(bool aRemoveNonExistentFiles)
     {
     QSettings settings;
-    QStringList files = settings.value("recentFileList").toStringList();
+    std::vector<FileDetails> recent_details = ReadRecentFileDetails(settings);
     int file_action_index = 0;
-    int file_index = 0;
-    while (file_index < files.size())
+    size_t detail_index = 0;
+    while (detail_index < recent_details.size())
         {
-        QFileInfo file_info(files[file_index]);
+        const auto& details = recent_details[detail_index];
+        if (details.m_files.empty())
+            {
+            recent_details.erase(recent_details.begin() + detail_index);
+            continue;
+            }
+
+        QFileInfo file_info(details.m_files[0]);
         if (aRemoveNonExistentFiles && !file_info.exists())
             {
-            files.erase(files.begin() + file_index);
+            recent_details.erase(recent_details.begin() + detail_index);
             continue;
             }
 
@@ -612,22 +834,19 @@ void MainWindow::UpdateRecentFiles(bool aRemoveNonExistentFiles)
                 text.remove(n,text.length() - n);
 
             m_recent_file_action[file_action_index]->setText(text);
-            m_recent_file_action[file_action_index]->setData(files[file_index]);
+            m_recent_file_action[file_action_index]->m_file_details = details;
             m_recent_file_action[file_action_index]->setVisible(true);
             file_action_index++;
             }
 
-        file_index++;
+        detail_index++;
         }
 
     while (file_action_index < KMaxRecentFiles)
         m_recent_file_action[file_action_index++]->setVisible(false);
 
     if (aRemoveNonExistentFiles)
-        {
-        settings.setValue("recentFileList",files);
-        settings.sync();
-        }
+        SaveRecentFileDetails(settings,recent_details);
     }
 
 void MainWindow::on_actionRotator_changed()
@@ -856,7 +1075,7 @@ void MainWindow::on_actionEdit_Custom_Style_Sheet_triggered()
 
     if (m_style_dialog->HaveError())
         {
-        std::string s { "style sheet parse error: " };
+        std::string s{ "style sheet parse error: " };
         s += m_style_dialog->ErrorMessage() + " at '" + m_style_dialog->ErrorLocation() + "'";
         ShowError(s.c_str(),0);
         m_style_dialog = nullptr;
@@ -935,7 +1154,7 @@ void MainWindow::UpdateRouteProfileMenuItems()
     if (m_map_form)
         {
         // Remove previous route profile menu items.
-        for (auto p: m_route_profile_action)
+        for (auto p : m_route_profile_action)
             m_ui->menuRoute->removeAction(p);
         m_route_profile_action.clear();
         if (m_route_profile_separator_after)
@@ -1159,4 +1378,3 @@ void MainWindow::on_actionFixed_Labels_changed()
     if (m_map_form)
         m_map_form->EnableFixedLabels(m_ui->actionFixed_Labels->isChecked());
     }
-
