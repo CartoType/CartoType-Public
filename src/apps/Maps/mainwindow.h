@@ -2,12 +2,15 @@
 
 #include <QMainWindow>
 #include <QMdiSubWindow>
+#include <QAction>
 #include <cartotype.h>
 
+class QSettings;
+
 namespace Ui
-    {
-    class MainWindow;
-    }
+{
+class MainWindow;
+}
 
 class MapForm;
 class StyleDialog;
@@ -29,7 +32,25 @@ class MapSettings
     bool m_show_height_profile = false;
     };
 
-class MainWindow: public QMainWindow
+class FileDetails
+    {
+    public:
+    std::vector<QString> m_files;
+    QByteArray m_geometry;
+    QString m_view_state;
+    MapSettings m_map_settings;
+    };
+
+class RecentFileAction : public QAction
+    {
+    Q_OBJECT
+
+    public:
+    explicit RecentFileAction(QObject* aParent = nullptr) : QAction(aParent) {}
+    FileDetails m_file_details;
+    };
+
+class MainWindow : public QMainWindow
     {
     Q_OBJECT
 
@@ -111,17 +132,11 @@ class MainWindow: public QMainWindow
     void on_actionSimulate_Routing_triggered(bool aChecked);
     void on_actionHeight_Profile_triggered(bool aChecked);
 
-    /*
-    These are manually connected slots. I don't use the "on_" naming convention because
-    it causes a message like "QMetaObject::connectSlotsByName: No matching signal for on_actionOpenRecentFile_triggered()";
-    that is because Qt Creator looks for slot functions starting with "on_" and
-    tries to connect them up.
-    */
     void OpenRecentFileTriggered();
     void SetRouteProfileTriggered();
     void FinishEditingCustomStyleSheet(int aResult);
 
-private:
+    private:
     static const int KMaxRecentFiles = 8;
 
     // from QWidget
@@ -129,26 +144,28 @@ private:
 
     void EnableMenuItems();
     void LoadMap(const std::vector<QString>& aPathArray,
-                 const QByteArray* aWindowGeometry = nullptr,
-                 const QString* aViewState = nullptr,
-                 const MapSettings* aMapSettings = nullptr);
+                    const QByteArray* aWindowGeometry = nullptr,
+                    const QString* aViewState = nullptr,
+                    const MapSettings* aMapSettings = nullptr);
     void UpdateRecentFiles(bool aRemoveNonExistentFiles = false);
     void UpdateRouteProfileMenuItems();
     void UpdateCustomRouteProfile();
+    std::vector<FileDetails> ReadRecentFileDetails(QSettings& aSettings);
+    void SaveRecentFileDetails(QSettings& aSettings,const std::vector<FileDetails>& aDetailsList);
 
-    Ui::MainWindow* m_ui = nullptr;   // note: this can't be kept in a std::unique_ptr; if you do that Qt Creator can't create slots and actions
-    QAction* m_print_separator = nullptr;  // the menu separator before the Print action
-    QAction* m_recent_file_separator = nullptr;  // the menu separator before the list of recent files
-    QAction* m_recent_file_action[KMaxRecentFiles] = { };  // menu items for recent files
-    QAction* m_route_profile_separator_after = nullptr;  // the menu separator after the route profile items
+    Ui::MainWindow* m_ui = nullptr;
+    QAction* m_print_separator = nullptr;
+    QAction* m_recent_file_separator = nullptr;
+    RecentFileAction* m_recent_file_action[KMaxRecentFiles] = { };
+    QAction* m_route_profile_separator_after = nullptr;
     std::vector<QAction*> m_route_profile_action;
-    MapForm* m_map_form = nullptr;    // the current map form if any; not owned
+    MapForm* m_map_form = nullptr;
     QString m_app_path;
     QString m_cartotype_source_path;
     CartoType::String m_default_style_sheet_path;
     CartoType::RouteProfile m_custom_route_profile;
     std::string m_custom_style_sheet;
     std::unique_ptr<StyleDialog> m_style_dialog;
-    MapForm* m_style_dialog_map_form = nullptr; // the map form to which the style dialog applies changes; not owned.
+    MapForm* m_style_dialog_map_form = nullptr;
     bool m_style_dialog_open = false;
     };

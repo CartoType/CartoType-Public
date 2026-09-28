@@ -313,7 +313,7 @@ class Framework: public MNavigatorObserver
     FileLocation StyleSheetErrorLocation() const;
 
     Result Resize(int32_t aViewWidth,int32_t aViewHeight);
-    void SetResolutionDpi(double aDpi);
+    Result SetResolutionDpi(double aDpi);
     double ResolutionDpi() const;
     Result SetScaleDenominator(double aScale);
     double ScaleDenominator() const;
@@ -324,8 +324,8 @@ class Framework: public MNavigatorObserver
     double ZoomLevelFromScaleDenominator(double aScaleDenominator,int32_t aImageSizeInPixels = 256) const;
     std::pair<double,double> DistortionAtPoint(const PointFP& aPoint,CoordType aCoordType) const;
 
-    void SetPerspective(bool aSet);
-    void SetPerspectiveParam(const PerspectiveParam& aParam);
+    Result SetPerspective(bool aSet);
+    Result SetPerspectiveParam(const PerspectiveParam& aParam);
     bool Perspective() const;
     CartoTypeCore::PerspectiveParam PerspectiveParam() const;
     Result Zoom(double aZoomFactor);
@@ -645,7 +645,7 @@ class Framework: public MNavigatorObserver
     void SetUserData(std::shared_ptr<MUserData> aUserData) { iUserData = aUserData; }
     double SetLabelUpAngle(double aAngle);
     double LabelUpAngle() const;
-    void SetLabelUpVector(PointFP aVector);
+    Result SetLabelUpVector(PointFP aVector);
     PointFP LabelUpVector() const;
     size_t RouteCalculationCost() const;
     /** Returns the current map drawing parameters. For internal use only. */
