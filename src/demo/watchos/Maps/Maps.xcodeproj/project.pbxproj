@@ -1,0 +1,756 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EC037DC12C1355820026BA40 /* CartoType.framework in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = EC2E85932C0E22BD0035D69F /* CartoType.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		EC037DC22C13560B0026BA40 /* CartoType.framework in Resources */ = {isa = PBXBuildFile; fileRef = EC2E85932C0E22BD0035D69F /* CartoType.framework */; };
+		EC037DC62C135ABA0026BA40 /* CartoType.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EC2E85932C0E22BD0035D69F /* CartoType.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		EC037DE52C16F79E0026BA40 /* santa-cruz.ctm1 in Resources */ = {isa = PBXBuildFile; fileRef = EC037DE12C16F75A0026BA40 /* santa-cruz.ctm1 */; };
+		EC037DE62C16F7A40026BA40 /* standard.ctstyle in Resources */ = {isa = PBXBuildFile; fileRef = EC037DE32C16F7970026BA40 /* standard.ctstyle */; };
+		EC037DE82C16F7C90026BA40 /* DejaVuSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC037DE72C16F7C90026BA40 /* DejaVuSans.ttf */; };
+		EC2E855C2C0E1C410035D69F /* Maps Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = EC2E855B2C0E1C410035D69F /* Maps Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EC2E85612C0E1C410035D69F /* MapsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2E85602C0E1C410035D69F /* MapsApp.swift */; };
+		EC2E85632C0E1C410035D69F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2E85622C0E1C410035D69F /* ContentView.swift */; };
+		EC2E85652C0E1C420035D69F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC2E85642C0E1C420035D69F /* Assets.xcassets */; };
+		EC2E85682C0E1C420035D69F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC2E85672C0E1C420035D69F /* Preview Assets.xcassets */; };
+		EC2E85722C0E1C420035D69F /* Maps_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2E85712C0E1C420035D69F /* Maps_Watch_AppTests.swift */; };
+		EC2E857C2C0E1C420035D69F /* Maps_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2E857B2C0E1C420035D69F /* Maps_Watch_AppUITests.swift */; };
+		EC2E857E2C0E1C420035D69F /* Maps_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2E857D2C0E1C420035D69F /* Maps_Watch_AppUITestsLaunchTests.swift */; };
+		EC2E85942C0E22BD0035D69F /* CartoType.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC2E85932C0E22BD0035D69F /* CartoType.framework */; };
+		EC2E85952C0E22BD0035D69F /* CartoType.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC2E85932C0E22BD0035D69F /* CartoType.framework */; };
+		EC2E85962C0E22BD0035D69F /* CartoType.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC2E85932C0E22BD0035D69F /* CartoType.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EC2E855D2C0E1C410035D69F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC2E854F2C0E1C410035D69F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC2E855A2C0E1C410035D69F;
+			remoteInfo = "Maps Watch App";
+		};
+		EC2E856E2C0E1C420035D69F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC2E854F2C0E1C410035D69F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC2E855A2C0E1C410035D69F;
+			remoteInfo = "Maps Watch App";
+		};
+		EC2E85782C0E1C420035D69F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC2E854F2C0E1C410035D69F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC2E855A2C0E1C410035D69F;
+			remoteInfo = "Maps Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EC037DC42C1359DC0026BA40 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				EC037DC62C135ABA0026BA40 /* CartoType.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E85842C0E1C420035D69F /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				EC037DC12C1355820026BA40 /* CartoType.framework in Embed Watch Content */,
+				EC2E855C2C0E1C410035D69F /* Maps Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		EC037DD82C16EE650026BA40 /* Maps-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Maps-Bridging-Header.h"; sourceTree = "<group>"; };
+		EC037DE12C16F75A0026BA40 /* santa-cruz.ctm1 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "santa-cruz.ctm1"; path = "../../../../test/data/ctm1/santa-cruz.ctm1"; sourceTree = "<group>"; };
+		EC037DE32C16F7970026BA40 /* standard.ctstyle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = standard.ctstyle; path = ../../../../../style/standard.ctstyle; sourceTree = "<group>"; };
+		EC037DE72C16F7C90026BA40 /* DejaVuSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = DejaVuSans.ttf; path = ../../../../../font/DejaVuSans.ttf; sourceTree = "<group>"; };
+		EC2E85552C0E1C410035D69F /* Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Maps.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC2E855B2C0E1C410035D69F /* Maps Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Maps Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC2E85602C0E1C410035D69F /* MapsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsApp.swift; sourceTree = "<group>"; };
+		EC2E85622C0E1C410035D69F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EC2E85642C0E1C420035D69F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EC2E85672C0E1C420035D69F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		EC2E856D2C0E1C420035D69F /* Maps Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Maps Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC2E85712C0E1C420035D69F /* Maps_Watch_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maps_Watch_AppTests.swift; sourceTree = "<group>"; };
+		EC2E85772C0E1C420035D69F /* Maps Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Maps Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC2E857B2C0E1C420035D69F /* Maps_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maps_Watch_AppUITests.swift; sourceTree = "<group>"; };
+		EC2E857D2C0E1C420035D69F /* Maps_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maps_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EC2E85932C0E22BD0035D69F /* CartoType.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CartoType.framework; path = ../../../main/single_library/watchos/CartoType.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EC2E85582C0E1C410035D69F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC2E85942C0E22BD0035D69F /* CartoType.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E856A2C0E1C420035D69F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC2E85952C0E22BD0035D69F /* CartoType.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E85742C0E1C420035D69F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC2E85962C0E22BD0035D69F /* CartoType.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EC037DE02C16F7130026BA40 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EC037DE72C16F7C90026BA40 /* DejaVuSans.ttf */,
+				EC037DE32C16F7970026BA40 /* standard.ctstyle */,
+				EC037DE12C16F75A0026BA40 /* santa-cruz.ctm1 */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EC2E854E2C0E1C410035D69F = {
+			isa = PBXGroup;
+			children = (
+				EC037DD82C16EE650026BA40 /* Maps-Bridging-Header.h */,
+				EC2E85932C0E22BD0035D69F /* CartoType.framework */,
+				EC2E855F2C0E1C410035D69F /* Maps Watch App */,
+				EC2E85702C0E1C420035D69F /* Maps Watch AppTests */,
+				EC2E857A2C0E1C420035D69F /* Maps Watch AppUITests */,
+				EC037DE02C16F7130026BA40 /* Resources */,
+				EC2E85562C0E1C410035D69F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EC2E85562C0E1C410035D69F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EC2E85552C0E1C410035D69F /* Maps.app */,
+				EC2E855B2C0E1C410035D69F /* Maps Watch App.app */,
+				EC2E856D2C0E1C420035D69F /* Maps Watch AppTests.xctest */,
+				EC2E85772C0E1C420035D69F /* Maps Watch AppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EC2E855F2C0E1C410035D69F /* Maps Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				EC2E85602C0E1C410035D69F /* MapsApp.swift */,
+				EC2E85622C0E1C410035D69F /* ContentView.swift */,
+				EC2E85642C0E1C420035D69F /* Assets.xcassets */,
+				EC2E85662C0E1C420035D69F /* Preview Content */,
+			);
+			path = "Maps Watch App";
+			sourceTree = "<group>";
+		};
+		EC2E85662C0E1C420035D69F /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				EC2E85672C0E1C420035D69F /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		EC2E85702C0E1C420035D69F /* Maps Watch AppTests */ = {
+			isa = PBXGroup;
+			children = (
+				EC2E85712C0E1C420035D69F /* Maps_Watch_AppTests.swift */,
+			);
+			path = "Maps Watch AppTests";
+			sourceTree = "<group>";
+		};
+		EC2E857A2C0E1C420035D69F /* Maps Watch AppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EC2E857B2C0E1C420035D69F /* Maps_Watch_AppUITests.swift */,
+				EC2E857D2C0E1C420035D69F /* Maps_Watch_AppUITestsLaunchTests.swift */,
+			);
+			path = "Maps Watch AppUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EC2E85542C0E1C410035D69F /* Maps */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC2E85852C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps" */;
+			buildPhases = (
+				EC2E85532C0E1C410035D69F /* Resources */,
+				EC2E85842C0E1C420035D69F /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EC2E855E2C0E1C410035D69F /* PBXTargetDependency */,
+			);
+			name = Maps;
+			productName = Maps;
+			productReference = EC2E85552C0E1C410035D69F /* Maps.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		EC2E855A2C0E1C410035D69F /* Maps Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC2E85812C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps Watch App" */;
+			buildPhases = (
+				EC2E85572C0E1C410035D69F /* Sources */,
+				EC2E85582C0E1C410035D69F /* Frameworks */,
+				EC2E85592C0E1C410035D69F /* Resources */,
+				EC037DC42C1359DC0026BA40 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Maps Watch App";
+			productName = "Maps Watch App";
+			productReference = EC2E855B2C0E1C410035D69F /* Maps Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EC2E856C2C0E1C420035D69F /* Maps Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC2E85882C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps Watch AppTests" */;
+			buildPhases = (
+				EC2E85692C0E1C420035D69F /* Sources */,
+				EC2E856A2C0E1C420035D69F /* Frameworks */,
+				EC2E856B2C0E1C420035D69F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EC2E856F2C0E1C420035D69F /* PBXTargetDependency */,
+			);
+			name = "Maps Watch AppTests";
+			productName = "Maps Watch AppTests";
+			productReference = EC2E856D2C0E1C420035D69F /* Maps Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EC2E85762C0E1C420035D69F /* Maps Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC2E858B2C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps Watch AppUITests" */;
+			buildPhases = (
+				EC2E85732C0E1C420035D69F /* Sources */,
+				EC2E85742C0E1C420035D69F /* Frameworks */,
+				EC2E85752C0E1C420035D69F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EC2E85792C0E1C420035D69F /* PBXTargetDependency */,
+			);
+			name = "Maps Watch AppUITests";
+			productName = "Maps Watch AppUITests";
+			productReference = EC2E85772C0E1C420035D69F /* Maps Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EC2E854F2C0E1C410035D69F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					EC2E85542C0E1C410035D69F = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+					EC2E855A2C0E1C410035D69F = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+					EC2E856C2C0E1C420035D69F = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = EC2E855A2C0E1C410035D69F;
+					};
+					EC2E85762C0E1C420035D69F = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = EC2E855A2C0E1C410035D69F;
+					};
+				};
+			};
+			buildConfigurationList = EC2E85522C0E1C410035D69F /* Build configuration list for PBXProject "Maps" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EC2E854E2C0E1C410035D69F;
+			productRefGroup = EC2E85562C0E1C410035D69F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EC2E85542C0E1C410035D69F /* Maps */,
+				EC2E855A2C0E1C410035D69F /* Maps Watch App */,
+				EC2E856C2C0E1C420035D69F /* Maps Watch AppTests */,
+				EC2E85762C0E1C420035D69F /* Maps Watch AppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EC2E85532C0E1C410035D69F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC037DC22C13560B0026BA40 /* CartoType.framework in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E85592C0E1C410035D69F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC037DE82C16F7C90026BA40 /* DejaVuSans.ttf in Resources */,
+				EC2E85682C0E1C420035D69F /* Preview Assets.xcassets in Resources */,
+				EC2E85652C0E1C420035D69F /* Assets.xcassets in Resources */,
+				EC037DE52C16F79E0026BA40 /* santa-cruz.ctm1 in Resources */,
+				EC037DE62C16F7A40026BA40 /* standard.ctstyle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E856B2C0E1C420035D69F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E85752C0E1C420035D69F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EC2E85572C0E1C410035D69F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC2E85632C0E1C410035D69F /* ContentView.swift in Sources */,
+				EC2E85612C0E1C410035D69F /* MapsApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E85692C0E1C420035D69F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC2E85722C0E1C420035D69F /* Maps_Watch_AppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC2E85732C0E1C420035D69F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC2E857C2C0E1C420035D69F /* Maps_Watch_AppUITests.swift in Sources */,
+				EC2E857E2C0E1C420035D69F /* Maps_Watch_AppUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EC2E855E2C0E1C410035D69F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC2E855A2C0E1C410035D69F /* Maps Watch App */;
+			targetProxy = EC2E855D2C0E1C410035D69F /* PBXContainerItemProxy */;
+		};
+		EC2E856F2C0E1C420035D69F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC2E855A2C0E1C410035D69F /* Maps Watch App */;
+			targetProxy = EC2E856E2C0E1C420035D69F /* PBXContainerItemProxy */;
+		};
+		EC2E85792C0E1C420035D69F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC2E855A2C0E1C410035D69F /* Maps Watch App */;
+			targetProxy = EC2E85782C0E1C420035D69F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		EC2E857F2C0E1C420035D69F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EC2E85802C0E1C420035D69F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		EC2E85822C0E1C420035D69F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Maps Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = Q566457U5C;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(PROJECT_DIR)\"",
+					"/Users/grahamasher/CartoType-mainline/src/main/single_library/watchos",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Maps;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cartotype.com.Maps.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Maps-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		EC2E85832C0E1C420035D69F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Maps Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = Q566457U5C;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(PROJECT_DIR)\"",
+					"/Users/grahamasher/CartoType-mainline/src/main/single_library/watchos",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Maps;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cartotype.com.Maps.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Maps-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		EC2E85862C0E1C420035D69F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q566457U5C;
+				INFOPLIST_KEY_CFBundleDisplayName = Maps;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cartotype.com.Maps;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		EC2E85872C0E1C420035D69F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q566457U5C;
+				INFOPLIST_KEY_CFBundleDisplayName = Maps;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cartotype.com.Maps;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EC2E85892C0E1C420035D69F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q566457U5C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cartotype.com.Maps-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Maps Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Maps Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		EC2E858A2C0E1C420035D69F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q566457U5C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cartotype.com.Maps-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Maps Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Maps Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		EC2E858C2C0E1C420035D69F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q566457U5C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cartotype.com.Maps-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "Maps Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		EC2E858D2C0E1C420035D69F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q566457U5C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cartotype.com.Maps-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "Maps Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EC2E85522C0E1C410035D69F /* Build configuration list for PBXProject "Maps" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC2E857F2C0E1C420035D69F /* Debug */,
+				EC2E85802C0E1C420035D69F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC2E85812C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC2E85822C0E1C420035D69F /* Debug */,
+				EC2E85832C0E1C420035D69F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC2E85852C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC2E85862C0E1C420035D69F /* Debug */,
+				EC2E85872C0E1C420035D69F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC2E85882C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC2E85892C0E1C420035D69F /* Debug */,
+				EC2E858A2C0E1C420035D69F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC2E858B2C0E1C420035D69F /* Build configuration list for PBXNativeTarget "Maps Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC2E858C2C0E1C420035D69F /* Debug */,
+				EC2E858D2C0E1C420035D69F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EC2E854F2C0E1C410035D69F /* Project object */;
+}
