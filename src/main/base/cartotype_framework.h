@@ -639,6 +639,7 @@ class Framework: public MNavigatorObserver
     /** Returns the CMap object owned by this framework. For internal use only.  */
     std::shared_ptr<CMap> MapSharedPtr() const { return iMap; }
     Color OutlineColor() const;
+    Color MapBorderColor() const;
     std::unique_ptr<Framework> CreateLegendFramework(Result& aError);
     std::unique_ptr<Bitmap> CreateBitmapFromSvg(InputStream& aInputStream,FileLocation& aErrorLocation,int32_t aForcedWidth = 0);
     /** Associates arbitrary data with this framework. Used by the Android SDK. */

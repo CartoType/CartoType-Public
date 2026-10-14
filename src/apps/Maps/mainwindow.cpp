@@ -542,7 +542,7 @@ void MainWindow::LoadMap(const std::vector<QString>& aPathArray,
 
 void MainWindow::OnMapFormDestroyed(MapForm* aMapForm)
     {
-    if (aMapForm && aMapForm->FileNameCount() > 0)
+    if (aMapForm && aMapForm->Valid() && aMapForm->FileNameCount() > 0)
         {
         FileDetails details;
         for (size_t i = 0; i < aMapForm->FileNameCount(); i++)
